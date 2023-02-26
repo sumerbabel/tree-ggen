@@ -1,16 +1,15 @@
-
-import { BehaviorSubject } from 'rxjs';
-
+import { BehaviorSubject, skipWhile, Subject } from 'rxjs';
 
 export class SubjectManager {
-  subject$ = new BehaviorSubject({});
+  subject$ = new Subject();
 
   getSubject() {
-    return this.subject$.asObservable();
+    return this.subject$.asObservable()
   }
 
   setSubject(value:any) {
     this.subject$.next(value);
 
   }
+
 }
