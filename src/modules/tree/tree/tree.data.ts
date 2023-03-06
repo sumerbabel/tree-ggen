@@ -4,6 +4,7 @@ export const DATA =
 		label: 'nivel 1',
 		isOpen:true,
 		level:0,
+		hasChildren:true,
 		children: [
 			{
 				id: '2',
@@ -11,6 +12,7 @@ export const DATA =
 				parentId:'1',
 				isOpen:true,
 				level:1,
+				hasChildren:false,
 			},
 			{
 				id: '3',
@@ -18,6 +20,7 @@ export const DATA =
 				parentId:'1',
 				isOpen:true,
 				level:1,
+				hasChildren:true,
 				children: [
 					{
 						id: '4',
@@ -25,6 +28,7 @@ export const DATA =
 						parentId:'3',
 						isOpen:true,
 						level:2,
+						hasChildren:false,
 					},
 					{
 						id: '5',
@@ -32,6 +36,7 @@ export const DATA =
 						parentId:'3',
 						isOpen:true,
 						level:2,
+						hasChildren:false,
 					},
 				],
 			},
@@ -42,6 +47,7 @@ export const DATA =
 				parentId:'1',
 				isOpen:true,
 				level:1,
+				hasChildren:true,
 				children: [
 					{
 						id: '7',
@@ -49,6 +55,7 @@ export const DATA =
 						parentId:'6',
 						isOpen:true,
 						level:2,
+						hasChildren:false,
 					},
 					{
 						id: '8',
@@ -56,6 +63,7 @@ export const DATA =
 						parentId:'6',
 						isOpen:true,
 						level:2,
+						hasChildren:false,
 					},
 				],
 			},

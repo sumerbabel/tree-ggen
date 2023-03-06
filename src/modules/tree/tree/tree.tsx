@@ -11,17 +11,15 @@ interface props
   function Tree ({onChange,data}:props) {
 
 	 const subscription$ = TreeNodeAddService.getSubject().subscribe((dataEvent:any)=>{
-		console.log('dataEvent',dataEvent)
 	  setTimeout(() => {
 		TreeNodeAddResultService.setSubject(dataEvent);
-	  }, 300)
+	  }, 0)
 	})
 
 	const suscriptionTreeNodeDeleteService$ =TreeNodeDeleteService.getSubject().subscribe((dataEvent:any)=>{
-		console.log('dataEvent delete',dataEvent)
 	  setTimeout(() => {
 		TreeNodeDeleteResultService.setSubject(dataEvent);
-	  }, 300)
+	  }, 0)
 	})
 
 	useEffect(()=>{return ()=>{

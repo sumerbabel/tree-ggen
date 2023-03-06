@@ -1,0 +1,32 @@
+.ux-child-container {
+    /* background-color: rgb(0, 132, 255); */
+    margin-left: 23px;
+    margin-right: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding: 0px;
+}
+
+.ux-contend {
+    /* background-color: rgb(255, 0, 166); */
+    display: flex;
+}
+
+.ux-item-contend {
+    /* background-color: rgb(43, 100, 45); */
+
+}
+
+.ux-control {
+    /* background-color: rgb(255, 81, 0); */
+
+    display: flex;
+}
+
+.ux-item-control {
+
+    background-color: transparent;
+    border: 1px rgb(233, 227, 227) solid;
+min-width: 23px;
+
+}
