@@ -35,7 +35,11 @@ function TreeNode({ onChange, onChangeForDelete: onChangeForDeleteNode, data }: 
   }
 
   const createNewNode = (nivel: number, orden: number) => {
-    return { id: uuidv4(), label: 'nueva ' + nivel + '.' + orden, parentId: datatree.id, isOpen: true, level: nivel }
+    let arrayOfStrings:string[] = datatree.routeDrawBranch.split(',')
+    arrayOfStrings.pop()
+    arrayOfStrings.push("0")
+    arrayOfStrings.push("1")
+    return { id: uuidv4(), label: 'nueva ' + nivel + '.' + orden, parentId: datatree.id, isOpen: true, level: nivel, routeDrawBranch:arrayOfStrings.toString() }
   }
 
   const handleClikDeleteNode = () => {
@@ -68,6 +72,30 @@ function TreeNode({ onChange, onChangeForDelete: onChangeForDeleteNode, data }: 
 
   const onChangeRecibed = (retorno: any) => { return onChange(retorno) }
 
+
+  let seasonsList:any = [];
+  const arrayOfStrings:[] = datatree.routeDrawBranch.split(',')
+console.log('arrayOfStrings',arrayOfStrings,datatree.routeDrawBranch )
+  arrayOfStrings.map((item)=>{
+
+    if( item ==='0'){
+      seasonsList.push(<div className="ux-empty-0" key={item}></div>);
+    }
+
+    if( item ==='1'){
+      seasonsList.push(<div className="ux-empty-1" key={item}></div>);
+    }
+
+    if( item ==='2'){
+      seasonsList.push(<div className="ux-empty-2" key={item}></div>);
+    }
+
+    if( item ==='3'){
+      seasonsList.push(<div className="ux-empty-3" key={item}></div>);
+    }
+
+  }) 
+  
   useEffect(() => {
     return () => {
       if (suscriberResultAdd$ instanceof Subscriber) { suscriberResultAdd$.unsubscribe() }
@@ -76,11 +104,14 @@ function TreeNode({ onChange, onChangeForDelete: onChangeForDeleteNode, data }: 
   }, [])
 
   return (
+    <>
     <div className="ux-child-container" key={datatree.id}>
+      <div className="ux-container-row">
+      {seasonsList}
       <div className="ux-contend">
         <div className="ux-control">
           {datatree.hasChildren && <button className="ux-button" onClick={() => handleclikChangeOpen()} >+</button>}
-          {!datatree.hasChildren && <div className="ux-item-control" ></div>}
+          {/* {!datatree.hasChildren && <div className="ux-item-control" ></div>} */}
         </div>
         <div className="ux-item-contend">{datatree.label}</div>
         <div className="ux-control">
@@ -88,6 +119,8 @@ function TreeNode({ onChange, onChangeForDelete: onChangeForDeleteNode, data }: 
           <button className="ux-button" onClick={() => handleClikDeleteNode()} >DEL</button>
         </div>
       </div>
+      </div>
+
 
       {datatree.isOpen && datatree.hasChildren && datatree.children.map((child: any) => {
         return (
@@ -100,6 +133,7 @@ function TreeNode({ onChange, onChangeForDelete: onChangeForDeleteNode, data }: 
         )
       })}
     </div>
+    </>
   );
 };
 
