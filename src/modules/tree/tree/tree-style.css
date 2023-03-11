@@ -1,3 +1,5 @@
+
+
 .ux-child-container {
     /* background-color: rgb(0, 132, 255); */
     /* margin-left: 23px; */
@@ -9,9 +11,8 @@
     
 }
 
+.ux-cotend {
 
-.ux-contend {
-    /* background-color: rgb(255, 0, 166); */
     display: flex;
 
 }
@@ -19,13 +20,10 @@
 
 
 .ux-item-contend {
-    /* background-color: rgb(43, 100, 45); */
 
 }
 
-.ux-control {
-    /* background-color: rgb(255, 81, 0); */
-
+.ux-cotrol {
     display: flex;
 }
 
@@ -37,146 +35,70 @@
 
 }
 
-.ux-empty-item-not-line{
-    background-color: transparent;
-    border: 0px rgb(233, 227, 227) solid;
-    width: 23px;
-    height: 23px;
-    position: relative;
-}
 
-.ux-empty-item-not-line::after{
-    content: "";
-    width: 2px;
-    background-color: rgb(55, 0, 255);
-    height: 30px;
-    left: 50%;
-    position: absolute;
-    top: -5px;
-
-}
-
-
-
-
-.ux-empty-item{
-    background-color: transparent;
-    border: 0px rgb(233, 227, 227) solid;
-    width: 23px;
-    height: 23px;
-    position: relative;
-}
-
-.ux-empty-item::before{
-    content: "";
-    width: 12px;
-    background-color: red;
-    height: 2px;
-    position: absolute;
-    top:50%;
-    left:50%
-}
-
-.ux-empty-item::after{
-    content: "";
-    width: 2px;
-    background-color: red;
-    height: 30px;
-    left: 50%;
-    position: absolute;
-    top: -5px;
-
-}
-
-
-.ux-container-row{
+.ux-cotainer-row{
     display: inline-flex;
     width: 100%;
     position: relative;
 }
 
-.ux-empty-0{
-    background-color: transparent;
-    border: 0px rgb(233, 227, 227) solid;
-    width: 23px;
-    height: 23px;
-    position: relative;
+.tree {
+    min-height:20px;
+    padding:19px;
+    margin-bottom:20px;
+    background-color:#fbfbfb;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    border-radius:4px;
+    -webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05)
 }
-
-
-.ux-empty-1{
-    background-color: transparent;
-    border: 0px rgb(233, 227, 227) solid;
-    width: 23px;
-    height: 23px;
-    position: relative;
+.tree li {
+    list-style-type:none;
+    margin:0;
+    padding:10px 5px 0 5px;
+    position:relative
 }
-
-.ux-empty-1::before{
-    content: "";
-    width: 12px;
-    background-color: red;
-    height: 2px;
-    position: absolute;
-    top:50%;
-    left:50%
+.tree li::before, .tree li::after {
+    content:'';
+    left:-20px;
+    position:absolute;
+    right:auto
 }
-
-.ux-empty-1::after{
-    content: "";
-    width: 2px;
-    background-color: red;
-    height: 15px;
-    left: 50%;
-    position: absolute;
-
-
+.tree li::before {
+    border-left:1px solid #999;
+    bottom:50px;
+    height:100%;
+    top:0;
+    width:1px
 }
-
-.ux-empty-2{
-    background-color: transparent;
-    border: 0px rgb(233, 227, 227) solid;
-    width: 23px;
-    height: 23px;
-    position: relative;
+.tree li::after {
+    border-top:1px solid #999;
+    height:20px;
+    top:30px;
+    width:25px
 }
-
-.ux-empty-2::before{
-    content: "";
-    width: 12px;
-    background-color: rgb(0, 64, 255);
-    height: 2px;
-    position: absolute;
-    top:50%;
-    left:50%
+.tree li span {
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border:1px solid #999;
+    border-radius:5px;
+    display:inline-block;
+    padding:3px 8px;
+    text-decoration:none
 }
-
-.ux-empty-2::after{
-    content: "";
-    width: 2px;
-    background-color: rgb(0, 82, 224);
-    height: 30px;
-    left: 50%;
-    position: absolute;
-    top: -5px;
-
+.tree li.parent_li>span {
+    cursor:pointer
 }
-
-.ux-empty-3{
-    background-color: transparent;
-    border: 0px rgb(233, 227, 227) solid;
-    width: 23px;
-    height: 23px;
-    position: relative;
+.tree>ul>li::before, .tree>ul>li::after {
+    border:0
 }
-
-.ux-empty-3::after{
-    content: "";
-    width: 2px;
-    background-color: rgb(157, 224, 0);
-    height: 30px;
-    left: 50%;
-    position: absolute;
-    top: 0px;
-
+.tree li:last-child::before {
+    height:30px
+}
+.tree li.parent_li>span:hover, .tree li.parent_li>span:hover+ul li span {
+    background:#eee;
+    border:1px solid #94a0b4;
+    color:#000
 }

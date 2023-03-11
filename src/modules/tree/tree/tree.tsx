@@ -31,7 +31,13 @@ interface props
 	  console.log('LLEGO FUNCION DE RETORNO PRINCIPAL', retorno)
 	  return onChange(retorno)
 		}
-	return (<TreeNode data={data}  onChange={onChangeRecibedF} onChangeForDelete={onChangeRecibedF}/>)
+	return (
+	<div className="tree">
+	<ul>
+	<TreeNode  data={data}  onChange={onChangeRecibedF} onChangeForDelete={onChangeRecibedF}/>
+	</ul>
+	</div>	
+	)
   }
   
   export default Tree

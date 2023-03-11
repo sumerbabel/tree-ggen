@@ -28,6 +28,44 @@ function TreeNode({ onChange, onChangeForDelete: onChangeForDeleteNode, data }: 
     suscriberResultAdd$ = TreeNodeAddResultService.getSubject().subscribe(() => {
       datatree['children'].push(newNode)
       datatree.hasChildren = true
+      const lengthArray =datatree['children'].length 
+      let resultmap =datatree['children'].map((item:any,index:number)=>{
+     
+        let arrayOfStrings:string[] = datatree.routeDrawBranch.split(',')
+        arrayOfStrings.pop()
+        arrayOfStrings.push("0")
+  
+     
+        if(index===0 && lengthArray===1){
+          arrayOfStrings.push("1")
+          item.routeDrawBranch=arrayOfStrings.toString();
+        }
+
+        if(index===0 && lengthArray >1){
+          arrayOfStrings.push("2")
+          item.routeDrawBranch=arrayOfStrings.toString();
+        }
+
+ 
+
+        if(index >0 &&  index < lengthArray -1){
+          arrayOfStrings.push("3")
+          item.routeDrawBranch=arrayOfStrings.toString();
+        }
+
+        if(index >0 && index=== lengthArray -1){
+          arrayOfStrings.push("1")
+          item.routeDrawBranch=arrayOfStrings.toString();
+        }
+        return item
+      })
+
+      console.log('datatree[children]',datatree['children'],'INITIAL')
+      
+      datatree['children'] =resultmap
+
+      console.log('datatree[children]',datatree['children'],'resultmap',resultmap)
+
       setDataTree({ ...datatree })
       if (suscriberResultAdd$ instanceof Subscriber) { suscriberResultAdd$.unsubscribe() }
     })
@@ -35,11 +73,8 @@ function TreeNode({ onChange, onChangeForDelete: onChangeForDeleteNode, data }: 
   }
 
   const createNewNode = (nivel: number, orden: number) => {
-    let arrayOfStrings:string[] = datatree.routeDrawBranch.split(',')
-    arrayOfStrings.pop()
-    arrayOfStrings.push("0")
-    arrayOfStrings.push("1")
-    return { id: uuidv4(), label: 'nueva ' + nivel + '.' + orden, parentId: datatree.id, isOpen: true, level: nivel, routeDrawBranch:arrayOfStrings.toString() }
+
+    return { id: uuidv4(), label: 'nueva ' + nivel + '.' + orden, parentId: datatree.id, isOpen: true, level: nivel, routeDrawBranch:"" }
   }
 
   const handleClikDeleteNode = () => {
@@ -79,22 +114,30 @@ console.log('arrayOfStrings',arrayOfStrings,datatree.routeDrawBranch )
   arrayOfStrings.map((item)=>{
 
     if( item ==='0'){
-      seasonsList.push(<div className="ux-empty-0" key={item}></div>);
+      seasonsList.push(<div className="ux-empty-0" key={uuidv4()}></div>);
     }
 
     if( item ==='1'){
-      seasonsList.push(<div className="ux-empty-1" key={item}></div>);
+      seasonsList.push(<div className="ux-empty-1" key={uuidv4()}></div>);
     }
 
     if( item ==='2'){
-      seasonsList.push(<div className="ux-empty-2" key={item}></div>);
+      seasonsList.push(<div className="ux-empty-2" key={uuidv4()}></div>);
     }
 
     if( item ==='3'){
-      seasonsList.push(<div className="ux-empty-3" key={item}></div>);
+      seasonsList.push(<div className="ux-empty-3" key={uuidv4()}></div>);
     }
 
   }) 
+
+  let classnameTree ='ux-li'
+  let classnameTreeChild ='ux-ul'
+
+  // if(datatree.level === 0){
+  //   classnameTree ='ux-ul'
+  // }
+  
   
   useEffect(() => {
     return () => {
@@ -104,14 +147,13 @@ console.log('arrayOfStrings',arrayOfStrings,datatree.routeDrawBranch )
   }, [])
 
   return (
-    <>
-    <div className="ux-child-container" key={datatree.id}>
+    <li className={classnameTree} key={datatree.id}>
       <div className="ux-container-row">
-      {seasonsList}
+      {/* {seasonsList} */}
       <div className="ux-contend">
         <div className="ux-control">
           {datatree.hasChildren && <button className="ux-button" onClick={() => handleclikChangeOpen()} >+</button>}
-          {/* {!datatree.hasChildren && <div className="ux-item-control" ></div>} */}
+          {!datatree.hasChildren && <div className="ux-item-control" ></div>}
         </div>
         <div className="ux-item-contend">{datatree.label}</div>
         <div className="ux-control">
@@ -121,19 +163,20 @@ console.log('arrayOfStrings',arrayOfStrings,datatree.routeDrawBranch )
       </div>
       </div>
 
+      {datatree.hasChildren && <ul className={classnameTreeChild}>
+        {datatree.isOpen && datatree.hasChildren && datatree.children.map((child: any) => {
+          return (
+            <TreeNode
+              key={child.id.toString()}
+              data={child}
+              onChangeForDelete={onChangeForDeleteRecibed}
+              onChange={onChangeRecibed}
+            />
+          )
+        })}
+      </ul>}
 
-      {datatree.isOpen && datatree.hasChildren && datatree.children.map((child: any) => {
-        return (
-          <TreeNode
-            key={child.id.toString()}
-            data={child}
-            onChangeForDelete={onChangeForDeleteRecibed}
-            onChange={onChangeRecibed}
-          />
-        )
-      })}
-    </div>
-    </>
+    </li> 
   );
 };
 
