@@ -4,6 +4,7 @@ import { TreeNodeAddService } from "./tree-node-add-service";
 import { TreeNodeAddResultService } from "./tree-node-add-result-service";
 import { TreeNodeDeleteService } from "./tree-node-delete-service copy";
 import { TreeNodeDeleteResultService } from "./tree-node-delete-result-service";
+import "./tree-style.css";
 interface props
 {	onChange:(data:any)=>void
 	data:any
