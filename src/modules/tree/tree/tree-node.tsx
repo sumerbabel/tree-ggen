@@ -1,19 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,Children, ReactNode } from "react";
 import { Subscriber } from "rxjs";
 import { v4 as uuidv4 } from 'uuid';
 import { TreeNodeAddResultService } from "./tree-node-add-result-service";
 import { TreeNodeAddService } from "./tree-node-add-service";
 import { TreeNodeDeleteResultService } from "./tree-node-delete-result-service";
 import { TreeNodeDeleteService } from "./tree-node-delete-service copy";
-import "./tree-style.css";
+import "./tree-style.scss";
 interface props {
   onChange: (data: any) => void
   onChangeForDelete: (data: any) => void
   data: any
+  render: (data: any) => JSX.Element
 }
 
-function TreeNode({ onChange, onChangeForDelete: onChangeForDeleteNode, data }: props) {
+function TreeNode({ onChange, onChangeForDelete, data,render }: props) {
 
+  console.log('render',render)
   const [datatree, setDataTree] = useState(data);
   let suscriberResultAdd$: any
 
@@ -36,11 +38,11 @@ function TreeNode({ onChange, onChangeForDelete: onChangeForDeleteNode, data }: 
   }
 
   const createNewNode = (nivel: number, orden: number) => {
-    return { id: uuidv4(), label: 'nueva ' + nivel + '.' + orden, parentId: datatree.id, isOpen: true, level: nivel, routeDrawBranch:"" }
+    return { id: uuidv4(), label: 'nueva  rdsfsdf sdfsdfsdf kjsdhfkjsdhfkjsdhf mskjdhfkjsdhfkjsd jhsdkjfhsdkjfhsdkjf shjkjfdhkjshfkjsdhf  sjhdgfsdhkfjhsdkf' + nivel + '.' + orden, parentId: datatree.id, isOpen: true, level: nivel, routeDrawBranch:"" }
   }
 
   const handleClikDeleteNode = () => {
-    onChangeForDeleteNode(datatree.id)
+    onChangeForDelete(datatree.id)
   }
 
   const handleclikChangeOpen = () => {
@@ -85,7 +87,11 @@ function TreeNode({ onChange, onChangeForDelete: onChangeForDeleteNode, data }: 
           {datatree.hasChildren && <button className="ux-button" onClick={() => handleclikChangeOpen()} >+</button>}
           {!datatree.hasChildren && <div className="ux-item-control" ></div>}
         </div>
-        <div className="ux-item-contend">{datatree.label}</div>
+        <div className="ux-item-contend">
+        {render(datatree)}
+          {/* {!children && datatree.label}
+          {children && children} */}
+        </div>
         <div className="ux-control">
           <button className="ux-button" onClick={() => handleClikAddNode()} >ADD</button>
           <button className="ux-button" onClick={() => handleClikDeleteNode()} >DEL</button>
@@ -98,6 +104,7 @@ function TreeNode({ onChange, onChangeForDelete: onChangeForDeleteNode, data }: 
             <TreeNode
               key={child.id.toString()}
               data={child}
+              render={render}
               onChangeForDelete={onChangeForDeleteRecibed}
               onChange={onChangeRecibed}
             />
