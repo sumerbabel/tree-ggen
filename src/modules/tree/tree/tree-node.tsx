@@ -4,13 +4,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { TreeNodeAddResultService } from "./tree-node-add-result-service";
 import { TreeNodeAddService } from "./tree-node-add-service";
 import { TreeNodeDeleteResultService } from "./tree-node-delete-result-service";
-import { TreeNodeDeleteService } from "./tree-node-delete-service copy";
+import { TreeNodeDeleteService } from "./tree-node-delete-service";
 import "./tree-style.scss";
 interface props {
   onChange: (data: any) => void
   onChangeForDelete: (data: any) => void
   data: any
-  render: (data: any) => JSX.Element
+  render?: (data: any) => JSX.Element
 }
 
 function TreeNode({ onChange, onChangeForDelete, data,render }: props) {
@@ -88,9 +88,9 @@ function TreeNode({ onChange, onChangeForDelete, data,render }: props) {
           {!datatree.hasChildren && <div className="ux-item-control" ></div>}
         </div>
         <div className="ux-item-contend">
-        {render(datatree)}
-          {/* {!children && datatree.label}
-          {children && children} */}
+        {/* {render(datatree)} */}
+          {!render && datatree.label}
+          {render && render(datatree)}
         </div>
         <div className="ux-control">
           <button className="ux-button" onClick={() => handleClikAddNode()} >ADD</button>
