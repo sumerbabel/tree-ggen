@@ -1,15 +1,22 @@
+import { SubjectManager } from "../../core/utilities/subject-manager"
 
 export enum TreeEvent {
-    Create = "CREATE",
-    ConfirmationCreate = "CONFIRMATION_CREATE",
-    Update = "UPDATE",
-    ConfirmationUpdate = "CONFIRMATION_UPDATE",
-    Delete = "DELETE",
-    ConfirmationDelete = "CONFIRMATION_DELETE",
-    Read = "READ",
-  }
+  Create = "CREATE",
+  ConfirmationCreate = "CONFIRMATION_CREATE",
+  Update = "UPDATE",
+  ConfirmationUpdate = "CONFIRMATION_UPDATE",
+  Delete = "DELETE",
+  ConfirmationDelete = "CONFIRMATION_DELETE",
+  Read = "READ",
+}
 
-export interface TreeData{
-    event:TreeEvent
-    data:any
+export interface TreeData {
+  event: TreeEvent
+  eventConfirmation: TreeEvent
+  data: any
+}
+
+export interface TreeEventData<T> {
+  treeData: TreeData
+  subject: SubjectManager<T>
 }

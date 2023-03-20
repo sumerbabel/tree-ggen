@@ -2,20 +2,17 @@ import { useEffect, useState } from "react";
 import { Subscriber } from "rxjs";
 import { v4 as uuidv4 } from 'uuid';
 import { SubjectManager } from "../../core/utilities/subject-manager";
-
 import "./tree-style.scss";
 import { TreeData, TreeEvent } from "./tree.data.interface";
 
 interface props {
-  onChange: (data: any) => void
-  onChangeForDelete: (data: any) => void
   data: any
   render?: (data: any) => JSX.Element
+  onChangeForDelete?: (data: any) => void
   treeNodeService: SubjectManager<TreeData>
 }
 
-function TreeNode({ onChange, onChangeForDelete, data, render, treeNodeService }: props) {
-
+function TreeNode({ onChangeForDelete, data, render, treeNodeService }: props) {
   const [datatree, setDataTree] = useState(data);
   let suscriberResultAdd$: any
 
@@ -25,18 +22,16 @@ function TreeNode({ onChange, onChangeForDelete, data, render, treeNodeService }
     }
     const newNode = createNewNode(datatree.level + 1, datatree.children.length + 1)
 
-    treeNodeService.setSubject({event:TreeEvent.Create,  data:newNode});
+    treeNodeService.setSubject({ event: TreeEvent.Create, eventConfirmation: TreeEvent.ConfirmationCreate, data: newNode });
 
     suscriberResultAdd$ = treeNodeService.getSubject().subscribe((data) => {
-      if(data.event === TreeEvent.ConfirmationCreate){
-        console.log('agrega', data)
+      if (data.event === TreeEvent.ConfirmationCreate) {
         datatree['children'].push(newNode)
         datatree.hasChildren = true
         setDataTree({ ...datatree })
+        if (suscriberResultAdd$ instanceof Subscriber) { suscriberResultAdd$.unsubscribe() }
       }
-      if (suscriberResultAdd$ instanceof Subscriber) { suscriberResultAdd$.unsubscribe() }
     })
-
   }
 
   const createNewNode = (nivel: number, orden: number) => {
@@ -44,7 +39,9 @@ function TreeNode({ onChange, onChangeForDelete, data, render, treeNodeService }
   }
 
   const handleClikDeleteNode = () => {
-    onChangeForDelete(datatree.id)
+    if (onChangeForDelete) {
+      onChangeForDelete(datatree.id)
+    }
   }
 
   const handleclikChangeOpen = () => {
@@ -54,28 +51,22 @@ function TreeNode({ onChange, onChangeForDelete, data, render, treeNodeService }
 
   let suscriberTreeNodeDeleteResultService$: any
   const onChangeForDeleteRecibed = (retorno: any) => {
-
     if (datatree.hasOwnProperty('children') && Array.isArray(datatree['children'])) {
-      treeNodeService.setSubject({event:TreeEvent.Delete,data: retorno})
+      treeNodeService.setSubject({ event: TreeEvent.Delete, eventConfirmation: TreeEvent.ConfirmationDelete, data: retorno })
       suscriberTreeNodeDeleteResultService$ = treeNodeService.getSubject().subscribe((data) => {
 
-        if(data.event === TreeEvent.ConfirmationDelete){
+        if (data.event === TreeEvent.ConfirmationDelete) {
           datatree['children'] = datatree['children'].filter((item: any) => item.id != retorno)
           if (datatree['children'].length === 0) {
             datatree.hasChildren = false
           }
           setDataTree({ ...datatree })
+          if (suscriberTreeNodeDeleteResultService$ instanceof Subscriber) { suscriberTreeNodeDeleteResultService$.unsubscribe() }
         }
-    
-        if (suscriberTreeNodeDeleteResultService$ instanceof Subscriber) { suscriberTreeNodeDeleteResultService$.unsubscribe() }
-
       })
 
     }
   }
-
-  const onChangeRecibed = (retorno: any) => { return onChange(retorno) }
-
 
   useEffect(() => {
     return () => {
@@ -109,13 +100,11 @@ function TreeNode({ onChange, onChangeForDelete, data, render, treeNodeService }
               data={child}
               render={render}
               onChangeForDelete={onChangeForDeleteRecibed}
-              onChange={onChangeRecibed}
               treeNodeService={treeNodeService}
             />
           )
         })}
       </ul>}
-
     </li>
   );
 };

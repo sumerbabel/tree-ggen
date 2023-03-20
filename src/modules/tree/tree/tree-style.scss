@@ -1,66 +1,62 @@
 $border: #ddd;
-$border-hover: rgb(71,71,71);
-$bg-hover: rgba(0,0,0,.1);
-$text: rgba(102,102,102,1);
+$border-hover: rgb(71, 71, 71);
+$bg-hover: rgba(0, 0, 0, 0.1);
+$text: rgba(102, 102, 102, 1);
 $text-hover: #000;
 $ident: 30px;
 $left: -($ident);
-$first:#DDF3FE;
-$second:#DDEBC8;
-$third:#FEFCD5;
+$first: #ddf3fe;
+$second: #ddebc8;
+$third: #fefcd5;
 
 * {
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-
-h1{
+h1 {
   padding: 0 0 10px 0;
 }
 ul {
-  margin-left:$ident;
+  margin-left: $ident;
   counter-reset: item;
 }
 
 .wtree {
   li {
     list-style-type: none;
-    margin:10px 0 10px 10px;
+    margin: 10px 0 10px 10px;
     position: relative;
     &:before {
       content: "";
-      counter-increment: item; 
+      counter-increment: item;
       position: absolute;
-      top:-10px;
-      left:$left;
+      top: -10px;
+      left: $left;
       border-left: 1px solid $border;
-      border-bottom:1px solid $border;
-      width:$ident;
-      height:15px;
+      border-bottom: 1px solid $border;
+      width: $ident;
+      height: 15px;
     }
     &:after {
-      position:absolute;
-      content:"";
-      top:5px;
-      left:$left;
+      position: absolute;
+      content: "";
+      top: 5px;
+      left: $left;
       border-left: 1px solid $border;
-      border-top:1px solid $border;
-      width:$ident;
-      height:100%;
+      border-top: 1px solid $border;
+      width: $ident;
+      height: 100%;
     }
     &:last-child:after {
-      display:none;
+      display: none;
     }
     .ux-cotainer-row {
       border: 1px solid $border;
-      padding:3px;
-      color:$text;
-      text-decoration:none;
-    //   &:before{ 
-    //   content: counters(item, ".") " ";    
-    // }
+      padding: 3px;
+      color: $text;
+      text-decoration: none;
     }
   }
 }
@@ -69,24 +65,25 @@ ul {
   li {
     .ux-cotainer-row {
       &:hover,
-      &:focus { 
-        color: $text-hover; 
+      &:focus {
+        color: $text-hover;
         border: 1px solid $border-hover;
         & + ul {
           li {
             .ux-cotainer-row {
-              color: $text-hover; 
+              color: $text-hover;
               border: 1px solid $border-hover;
             }
           }
         }
       }
 
-      &:hover + ul, 
+      &:hover + ul,
       &:focus + ul {
         li {
-          &:after,&:before {
-            border-color:  $border-hover;
+          &:after,
+          &:before {
+            border-color: $border-hover;
           }
         }
       }
@@ -94,41 +91,52 @@ ul {
   }
 }
 
-li .ux-cotainer-row {background-color:$first}
-li li .ux-cotainer-row{background-color:$second}
-li li li .ux-cotainer-row{background-color:$third}
-li li li li .ux-cotainer-row{background-color:rgb(254, 255, 227)}
-li li li li li .ux-cotainer-row{background-color:rgb(249, 249, 210)}
-li li li li li li  .ux-cotainer-row{background-color:rgb(249, 249, 249)}
-
-.display{
-  margin-right:12px;
-  font-weight:bold;
+li .ux-cotainer-row {
+  background-color: $first;
+}
+li li .ux-cotainer-row {
+  background-color: $second;
+}
+li li li .ux-cotainer-row {
+  background-color: $third;
+}
+li li li li .ux-cotainer-row {
+  background-color: rgb(254, 255, 227);
+}
+li li li li li .ux-cotainer-row {
+  background-color: rgb(249, 249, 210);
+}
+li li li li li li .ux-cotainer-row {
+  background-color: rgb(249, 249, 249);
 }
 
-input , label{
-  margin:12px 0px 20px 0px;
+.display {
+  margin-right: 12px;
+  font-weight: bold;
+}
+
+input,
+label {
+  margin: 12px 0px 20px 0px;
 }
 
 label {
-    padding-left: 6px;
-    padding-right: 12px;
+  padding-left: 6px;
+  padding-right: 12px;
 }
 
-
 .ux-cotrol {
-    position: relative;
+  position: relative;
 }
 
 .ux-cotainer-row {
-    width: 100%;
-    display: flex;
+  width: 100%;
+  display: flex;
 }
 
 .ux-button {
-    position: relative;
+  position: relative;
 }
-
 
 .ux-external {
   border: solid 1px red;
