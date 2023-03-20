@@ -1,10 +1,8 @@
 import { useEffect } from "react";
 import TreeNode from "./tree-node";
-import { TreeNodeAddService } from "./tree-node-add-service";
-import { TreeNodeAddResultService } from "./tree-node-add-result-service";
-import { TreeNodeDeleteService } from "./tree-node-delete-service";
-import { TreeNodeDeleteResultService } from "./tree-node-delete-result-service";
 import "./tree-style.scss";
+import { SubjectManager } from "../../core/utilities/subject-manager";
+import { TreeData } from "./tree.data.interface";
 
 interface props {
 	onChange: (data: any) => void
@@ -12,17 +10,19 @@ interface props {
 	render?: (data: any) => JSX.Element
 }
 function Tree({ onChange, data, render }: props) {
+	const treeNodeService:SubjectManager<TreeData> = new SubjectManager<TreeData>()
 
-	const subscription$ = TreeNodeAddService.getSubject().subscribe((dataEvent: any) => {
+	const subscription$ = treeNodeService.getSubject().subscribe((dataEvent: any) => {
 		setTimeout(() => {
 			//TreeNodeAddResultService.setSubject(dataEvent);
-			onChange({ event: 'ADD_NODE', node: dataEvent, observer: TreeNodeAddResultService })
+			onChange({ dataEvent, observer: treeNodeService })
 		}, 0)
 	})
 
-	const suscriptionTreeNodeDeleteService$ = TreeNodeDeleteService.getSubject().subscribe((dataEvent: any) => {
+	const suscriptionTreeNodeDeleteService$ = treeNodeService.getSubject().subscribe((dataEvent: any) => {
 		setTimeout(() => {
-			TreeNodeDeleteResultService.setSubject(dataEvent);
+			//treeNodeDeleteResultService.setSubject(dataEvent);
+			onChange({ dataEvent, observer: treeNodeService })
 		}, 0)
 	})
 
@@ -40,7 +40,7 @@ function Tree({ onChange, data, render }: props) {
 	return (
 		<div>
 			<ul className="wtree">
-				<TreeNode data={data} onChange={onChangeRecibedF} onChangeForDelete={onChangeRecibedF} render={render} />
+				<TreeNode data={data} onChange={onChangeRecibedF} onChangeForDelete={onChangeRecibedF} render={render} treeNodeService={treeNodeService}/>
 			</ul>
 		</div>
 	)
