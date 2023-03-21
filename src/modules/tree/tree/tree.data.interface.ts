@@ -1,4 +1,5 @@
-import { SubjectManager } from "../../core/utilities/subject-manager"
+
+import { TreeSubject } from "./tree.subject"
 
 export enum TreeEvent {
   Create = "CREATE",
@@ -18,5 +19,5 @@ export interface TreeData {
 
 export interface TreeEventData<T> {
   treeData: TreeData
-  subject: SubjectManager<T>
+  subject: TreeSubject<T>
 }
