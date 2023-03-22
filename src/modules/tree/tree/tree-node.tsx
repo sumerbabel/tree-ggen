@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import "./tree-style.scss";
-import { useTreeContext } from "./tree.context";
+
 import { TreeData, TreeEvent } from "./tree.data.interface";
 import { TreeSubject } from "./tree.subject";
 
@@ -14,7 +14,7 @@ interface props {
 
 function TreeNode({ onChangeForDelete, data, render, treeNodeService }: props) {
   const [datatree, setDataTree] = useState(data);
-  const {setEventContext, getValueContext , confirmationEvent} =useTreeContext()
+
   let suscriberResultAdd$: any
 
   const miCallback = useCallback(() => {
@@ -26,13 +26,6 @@ function TreeNode({ onChangeForDelete, data, render, treeNodeService }: props) {
       datatree['children'] = []
     }
     const newNode = createNewNode(datatree.level + 1, datatree.children.length + 1)
-
-
-    setEventContext(TreeEvent.Create)
-
- 
-
-    confirmationEvent(miCallback)
 
     treeNodeService.next({ event: TreeEvent.Create, eventConfirmation: TreeEvent.ConfirmationCreate, data: newNode });
 

@@ -1,6 +1,5 @@
 import './App.css'
 import Tree from './modules/tree/tree/tree'
-import { TreeProvider } from './modules/tree/tree/tree.context'
 import { DATA } from './modules/tree/tree/tree.data'
 import { TreeEventData } from './modules/tree/tree/tree.data.interface'
 
@@ -20,15 +19,8 @@ function App() {
 
   return (
     <>
-    <TreeProvider>
     <Tree data={data} onChange={onChangeRecibedF} render={External} />
-    </TreeProvider>
-
-    <TreeProvider>
     <Tree data={data2} onChange={onChangeRecibedF2} />
-    </TreeProvider>
-   
-      
     </>
   )
 }
