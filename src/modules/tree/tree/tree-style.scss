@@ -3,7 +3,7 @@ $border-hover: rgb(71, 71, 71);
 $bg-hover: rgba(0, 0, 0, 0.1);
 $text: rgba(102, 102, 102, 1);
 $text-hover: #000;
-$ident: 30px;
+$ident: 15px;
 $left: -($ident);
 $first: #ddf3fe;
 $second: #ddebc8;
@@ -15,19 +15,29 @@ $third: #fefcd5;
   box-sizing: border-box;
 }
 
-h1 {
-  padding: 0 0 10px 0;
-}
-ul {
+
+
+ul:not(.wtree) {
   margin-left: $ident;
   counter-reset: item;
 }
 
 .wtree {
-  li {
+  li{
     list-style-type: none;
     margin: 10px 0 10px 10px;
     position: relative;
+    .ux-cotainer-row {
+      border: 1px solid $border;
+      padding: 3px;
+      color: $text;
+      text-decoration: none;
+    }
+  }
+}
+
+.wtree {
+  li:not(.no-first) {
     &:before {
       content: "";
       counter-increment: item;
@@ -52,12 +62,7 @@ ul {
     &:last-child:after {
       display: none;
     }
-    .ux-cotainer-row {
-      border: 1px solid $border;
-      padding: 3px;
-      color: $text;
-      text-decoration: none;
-    }
+
   }
 }
 
@@ -91,24 +96,6 @@ ul {
   }
 }
 
-li .ux-cotainer-row {
-  background-color: $first;
-}
-li li .ux-cotainer-row {
-  background-color: $second;
-}
-li li li .ux-cotainer-row {
-  background-color: $third;
-}
-li li li li .ux-cotainer-row {
-  background-color: rgb(254, 255, 227);
-}
-li li li li li .ux-cotainer-row {
-  background-color: rgb(249, 249, 210);
-}
-li li li li li li .ux-cotainer-row {
-  background-color: rgb(249, 249, 249);
-}
 
 .display {
   margin-right: 12px;
@@ -130,7 +117,7 @@ label {
 }
 
 .ux-cotainer-row {
-  width: 100%;
+  width: 99%;
   display: flex;
 }
 

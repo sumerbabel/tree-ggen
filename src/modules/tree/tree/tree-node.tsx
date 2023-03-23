@@ -1,37 +1,33 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
+import { TreeData, TreeDataModel, TreeEvent } from "./tree.data.interface";
+import { TreeSubject } from "./tree.subject";
 import "./tree-style.scss";
 
-import { TreeData, TreeEvent } from "./tree.data.interface";
-import { TreeSubject } from "./tree.subject";
-
-interface props {
-  data: any
-  render?: (data: any) => JSX.Element
-  onChangeForDelete?: (data: any) => void
-  treeNodeService: TreeSubject<TreeData>
+interface props<T> {
+  data: TreeDataModel<T>
+  render?: (dataRender: any) => JSX.Element
+  onChangeForDelete?: (id: string) => void
+  treeNodeService: TreeSubject<TreeData<T>>
+  initialClassName?:string
 }
 
-function TreeNode({ onChangeForDelete, data, render, treeNodeService }: props) {
-  const [datatree, setDataTree] = useState(data);
+function TreeNode<T>({ onChangeForDelete, data, render, treeNodeService,initialClassName }: props<T>) {
+  const [datatree, setDataTree] = useState<TreeDataModel<T>>(data)
 
   let suscriberResultAdd$: any
-
-  const miCallback = useCallback(() => {
-    console.log("Ejecutando callback desde el componente hijo");
-  }, []);
 
   const handleClikAddNode = () => {
     if (!datatree.hasOwnProperty('children') && !Array.isArray(datatree['children'])) {
       datatree['children'] = []
     }
-    const newNode = createNewNode(datatree.level + 1, datatree.children.length + 1)
+    const newNode = createNewNode(datatree.level + 1, datatree.children? datatree.children.length:0 + 1)
 
-    treeNodeService.next({ event: TreeEvent.Create, eventConfirmation: TreeEvent.ConfirmationCreate, data: newNode });
+    treeNodeService.next({ event: TreeEvent.Create, eventConfirmation: TreeEvent.ConfirmationCreate, data: newNode })
 
     suscriberResultAdd$ = treeNodeService.subscribe((data) => {
       if (data.event === TreeEvent.ConfirmationCreate) {
-        datatree['children'].push(newNode)
+        datatree.children?.push(newNode)
         datatree.hasChildren = true
         setDataTree({ ...datatree })
         if (suscriberResultAdd$) { suscriberResultAdd$() }
@@ -39,8 +35,8 @@ function TreeNode({ onChangeForDelete, data, render, treeNodeService }: props) {
     })
   }
 
-  const createNewNode = (nivel: number, orden: number) => {
-    return { id: uuidv4(), label: uuidv4() + nivel + '.' + orden, parentId: datatree.id, isOpen: true, level: nivel, routeDrawBranch: "" }
+  const createNewNode = (nivel: number, orden: number):TreeDataModel<T> => {
+    return { id: uuidv4(), label: uuidv4() + nivel + '.' + orden, parentId: datatree.id, isOpen: true, level: nivel,hasChildren:false, data:{}as T}
   }
 
   const handleClikDeleteNode = () => {
@@ -49,28 +45,28 @@ function TreeNode({ onChangeForDelete, data, render, treeNodeService }: props) {
     }
   }
 
-  const handleclikChangeOpen = () => {
-    datatree.isOpen = !datatree.isOpen
-    setDataTree({ ...datatree })
-  }
-
   let suscriberTreeNodeDeleteResultService$: any
   const onChangeForDeleteRecibed = (retorno: any) => {
     if (datatree.hasOwnProperty('children') && Array.isArray(datatree['children'])) {
       treeNodeService.next({ event: TreeEvent.Delete, eventConfirmation: TreeEvent.ConfirmationDelete, data: retorno })
       suscriberTreeNodeDeleteResultService$ = treeNodeService.subscribe((data) => {
-
+        
         if (data.event === TreeEvent.ConfirmationDelete) {
-          datatree['children'] = datatree['children'].filter((item: any) => item.id != retorno)
-          if (datatree['children'].length === 0) {
+          datatree['children'] = datatree['children']?.filter((item: any) => item.id != retorno)
+          if (datatree['children']?.length === 0) {
             datatree.hasChildren = false
           }
           setDataTree({ ...datatree })
           if (suscriberTreeNodeDeleteResultService$) { suscriberTreeNodeDeleteResultService$() }
         }
       })
-
+      
     }
+  }
+  
+  const handleclikChangeOpen = () => {
+    datatree.isOpen = !datatree.isOpen
+    setDataTree({ ...datatree })
   }
 
   useEffect(() => {
@@ -81,7 +77,7 @@ function TreeNode({ onChangeForDelete, data, render, treeNodeService }: props) {
   }, [])
 
   return (
-    <li key={datatree.id}>
+    <li key={datatree.id} className={initialClassName}>
       <div className="ux-cotainer-row">
         <div className="ux-control">
           {datatree.hasChildren && <button className="ux-button" onClick={() => handleclikChangeOpen()} >+</button>}
@@ -98,9 +94,9 @@ function TreeNode({ onChangeForDelete, data, render, treeNodeService }: props) {
       </div>
 
       {datatree.hasChildren && <ul>
-        {datatree.isOpen && datatree.hasChildren && datatree.children.map((child: any) => {
+        {datatree.isOpen && datatree.hasChildren && datatree.children?.map((child: any) => {
           return (
-            <TreeNode
+            <TreeNode <T>
               key={child.id.toString()}
               data={child}
               render={render}
@@ -111,7 +107,7 @@ function TreeNode({ onChangeForDelete, data, render, treeNodeService }: props) {
         })}
       </ul>}
     </li>
-  );
-};
+  )
+}
 
 export default TreeNode;

@@ -1,26 +1,29 @@
 import './App.css'
 import Tree from './modules/tree/tree/tree'
 import { DATA } from './modules/tree/tree/tree.data'
-import { TreeEventData } from './modules/tree/tree/tree.data.interface'
+import { TreeData } from './modules/tree/tree/tree.data.interface'
+import { TreeSubject } from './modules/tree/tree/tree.subject'
 
 function App() {
   const data = DATA
   const data2 = structuredClone(DATA)
 
-  const onChangeRecibedF = (treeEventData: TreeEventData<any>) => {
-    setTimeout(() => {treeEventData.subject.next({ event: treeEventData.treeData.eventConfirmation, data: treeEventData.treeData })}, 0)
+  const onChangeRecibedF = (treeEventData: TreeData<string>, subject:TreeSubject<TreeData<string>>) => {
+    treeEventData.event =treeEventData.eventConfirmation
+    setTimeout(() => {subject.next(treeEventData)}, 0)
     console.log('RETORNO1', treeEventData)
   }
 
-  const onChangeRecibedF2 = (treeEventData: TreeEventData<any>) => {
-    setTimeout(() => {treeEventData.subject.next({ event: treeEventData.treeData.eventConfirmation, data: treeEventData.treeData })}, 0)
+  const onChangeRecibedF2 = (treeEventData: TreeData<string>, subject:TreeSubject<TreeData<string>>) => {
+    treeEventData.event =treeEventData.eventConfirmation
+    setTimeout(() => {subject.next(treeEventData)}, 0)
     console.log('RETORNO2', treeEventData)
   }
 
   return (
     <>
-    <Tree data={data} onChange={onChangeRecibedF} render={External} />
-    <Tree data={data2} onChange={onChangeRecibedF2} />
+    <Tree <string> data={data} onChange={onChangeRecibedF} render={External} />
+    <Tree <string> data={data2} onChange={onChangeRecibedF2} />
     </>
   )
 }

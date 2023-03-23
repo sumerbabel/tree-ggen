@@ -2,10 +2,11 @@ export const DATA =
 	{
 		id: '1',
 		label: 'nivel 1',
+		parentId:'0',
 		isOpen:true,
 		level:0,
 		hasChildren:true,
-		routeDrawBranch:'',
+		data:'',
 		children: [
 			{
 				id: '2',
@@ -14,7 +15,7 @@ export const DATA =
 				isOpen:true,
 				level:1,
 				hasChildren:false,
-				routeDrawBranch:'1',
+				data:'',
 			},
 			{
 				id: '3',
@@ -23,7 +24,7 @@ export const DATA =
 				isOpen:true,
 				level:1,
 				hasChildren:true,
-				routeDrawBranch:'2',
+				data:'',
 				children: [
 					{
 						id: '4',
@@ -32,7 +33,7 @@ export const DATA =
 						isOpen:true,
 						level:2,
 						hasChildren:false,
-						routeDrawBranch:'3,1',
+						data:'',
 					},
 					{
 						id: '5',
@@ -41,7 +42,7 @@ export const DATA =
 						isOpen:true,
 						level:2,
 						hasChildren:false,
-						routeDrawBranch:'3,1',
+						data:'',
 					},
 				],
 			},
@@ -53,7 +54,7 @@ export const DATA =
 				isOpen:true,
 				level:1,
 				hasChildren:true,
-				routeDrawBranch:'1',
+				data:'',
 				children: [
 					{
 						id: '7',
@@ -62,7 +63,7 @@ export const DATA =
 						isOpen:true,
 						level:2,
 						hasChildren:false,
-						routeDrawBranch:'0,1',
+						data:'',
 					},
 					{
 						id: '8',
@@ -71,7 +72,7 @@ export const DATA =
 						isOpen:true,
 						level:2,
 						hasChildren:false,
-						routeDrawBranch:'0,1',
+						data:'',
 					},
 				],
 			},
@@ -86,7 +87,7 @@ export const DATA =
 		isOpen:true,
 		level:0,
 		hasChildren:true,
-		routeDrawBranch:'',
+		data:'',
 		children: [
 			{
 				id: '2',
@@ -95,7 +96,7 @@ export const DATA =
 				isOpen:true,
 				level:1,
 				hasChildren:false,
-				routeDrawBranch:'1',
+				data:'',
 			},
 			{
 				id: '3',
@@ -104,7 +105,7 @@ export const DATA =
 				isOpen:true,
 				level:1,
 				hasChildren:true,
-				routeDrawBranch:'2',
+				data:'',
 				children: [
 					{
 						id: '4',
@@ -113,7 +114,7 @@ export const DATA =
 						isOpen:true,
 						level:2,
 						hasChildren:false,
-						routeDrawBranch:'3,1',
+						data:'',
 					},
 					{
 						id: '5',
@@ -122,7 +123,7 @@ export const DATA =
 						isOpen:true,
 						level:2,
 						hasChildren:false,
-						routeDrawBranch:'3,1',
+						data:'',
 					},
 				],
 			},
@@ -134,7 +135,7 @@ export const DATA =
 				isOpen:true,
 				level:1,
 				hasChildren:true,
-				routeDrawBranch:'1',
+				data:'',
 				children: [
 					{
 						id: '7',
@@ -143,7 +144,7 @@ export const DATA =
 						isOpen:true,
 						level:2,
 						hasChildren:false,
-						routeDrawBranch:'0,1',
+						data:'',
 					},
 					{
 						id: '8',
@@ -152,7 +153,7 @@ export const DATA =
 						isOpen:true,
 						level:2,
 						hasChildren:false,
-						routeDrawBranch:'0,1',
+						data:'',
 					},
 				],
 			},
