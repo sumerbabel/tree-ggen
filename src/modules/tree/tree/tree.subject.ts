@@ -20,6 +20,9 @@ export class TreeSubject<T> implements ISubject<T> {
   }
 
   public next(value: T) {
-    this.observers.forEach((observer) => observer(value));
+    setTimeout(() => {
+      this.observers.forEach((observer) => observer(value));
+    }, 0);
+   
   }
 }

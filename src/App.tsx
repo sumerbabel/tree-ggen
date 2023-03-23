@@ -10,14 +10,14 @@ function App() {
 
   const onChangeRecibedF = (treeEventData: TreeData<string>, subject:TreeSubject<TreeData<string>>) => {
     treeEventData.event =treeEventData.eventConfirmation
-    setTimeout(() => {subject.next(treeEventData)}, 0)
-    console.log('RETORNO1', treeEventData)
+    console.log('data1',data)
+    subject.next(treeEventData)
   }
 
   const onChangeRecibedF2 = (treeEventData: TreeData<string>, subject:TreeSubject<TreeData<string>>) => {
     treeEventData.event =treeEventData.eventConfirmation
-    setTimeout(() => {subject.next(treeEventData)}, 0)
-    console.log('RETORNO2', treeEventData)
+    console.log('data2',data2)
+    subject.next(treeEventData)
   }
 
   return (
