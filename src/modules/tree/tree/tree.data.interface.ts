@@ -1,4 +1,3 @@
-import { TreeSubject } from "./tree.subject"
 
 export enum TreeKeyEvent {
   Create = "CREATE",
@@ -19,7 +18,7 @@ export interface TreeData<T> {
 }
 
 
-export class TreeDataEvent<T>{ 
+export class TreeDataEvent<T = unknown>{ 
   public event: TreeKeyEvent
   public eventConfirmation: TreeKeyEvent
   public data: TreeDataModel<T>
@@ -34,7 +33,7 @@ export class TreeDataEvent<T>{
   }
 }
 
-export interface TreeDataModel<T> {
+export interface TreeDataModel<T = unknown> {
   id: string
   label: string
   parentId: string
@@ -46,7 +45,7 @@ export interface TreeDataModel<T> {
 }
 
 
-export interface RenderTree<T> {
+export interface RenderTree<T = unknown> {
 	onChange: (treeEventData: TreeDataEvent<T>) => any
 	data: TreeDataModel<T>
 }

@@ -2,48 +2,46 @@
 import './App.css'
 import Tree from './modules/tree/tree/tree'
 import { DATA } from './modules/tree/tree/tree.data'
-import { RenderTree, TreeDataEvent, TreeDataModel, TreeKeyEvent } from './modules/tree/tree/tree.data.interface'
+import { RenderTree, TreeDataEvent, TreeKeyEvent } from './modules/tree/tree/tree.data.interface'
 import { TreeSubject } from './modules/tree/tree/tree.subject'
 
 function App() {
-  const data = DATA
-  const data2 = structuredClone(DATA)
+  const data:any = DATA
+  const data2:any = structuredClone(DATA)
 
-  const onChangeRecibedF = (treeEventData: TreeDataEvent<string>, subject: TreeSubject<TreeDataEvent<string>>) => {
+  const onChangeRecibedF = (treeEventData: TreeDataEvent, subject: TreeSubject<TreeDataEvent>) => {
     subject.next(treeEventData.getTreDataEventConfirmation())
   }
 
-  const onChangeRecibedF2 = (treeEventData: TreeDataEvent<string>, subject: TreeSubject<TreeDataEvent<string>>) => {
+  const onChangeRecibedF2 = (treeEventData: TreeDataEvent, subject: TreeSubject<TreeDataEvent>) => {
     subject.next(treeEventData.getTreDataEventConfirmation())
   }
+
+  const arrayKeysEvents =[TreeKeyEvent.Create, TreeKeyEvent.Update, TreeKeyEvent.Delete]
 
   return (
     <>
-      <Tree <string> data={data} onChange={onChangeRecibedF} render={External} />
-      <Tree <string> data={data2} onChange={onChangeRecibedF2} />
+      <Tree  data={data2} onChange={onChangeRecibedF} render={External} complete_subsititute_row_contend={true} arrayKeysEvents ={arrayKeysEvents} />
+      <Tree  data={data} onChange={onChangeRecibedF2} arrayKeysEvents ={arrayKeysEvents}/>
     </>
   )
 }
 
 export default App
 
-export function External<T>(props: RenderTree<T>) {
-
+export function External<T = unknown>(props: RenderTree<T>) {
   const toggleExpand = () => {
-    const treeDataEvent = new TreeDataEvent<T>(TreeKeyEvent.toggleExpand, TreeKeyEvent.ConfirmationUpdate, props.data)
-    const ejecuteexpand = props.onChange(treeDataEvent)
+    const ejecuteexpand = props.onChange(new TreeDataEvent<T>(TreeKeyEvent.toggleExpand, TreeKeyEvent.ConfirmationUpdate, props.data))
     console.log('ejecuteexpand', ejecuteexpand)
   }
 
   const createNode = () => {
-    const treeDataEvent = new TreeDataEvent<T>(TreeKeyEvent.Create, TreeKeyEvent.ConfirmationUpdate, props.data)
-    const ejecuteCreateNode = props.onChange(treeDataEvent)
+    const ejecuteCreateNode = props.onChange(new TreeDataEvent<T>(TreeKeyEvent.Create, TreeKeyEvent.ConfirmationUpdate, props.data))
     console.log('ejecuteCreateNode', ejecuteCreateNode)
   }
 
   const deleteNode = () => {
-    const treeDataEvent = new TreeDataEvent<T>(TreeKeyEvent.Delete, TreeKeyEvent.ConfirmationUpdate, props.data)
-    const ejecuteDeleteNode = props.onChange(treeDataEvent)
+    const ejecuteDeleteNode = props.onChange(new TreeDataEvent<T>(TreeKeyEvent.Delete, TreeKeyEvent.ConfirmationUpdate, props.data))
     console.log('ejecuteDeleteNode', ejecuteDeleteNode)
   }
 

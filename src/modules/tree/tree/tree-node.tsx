@@ -4,15 +4,17 @@ import { RenderTree, TreeDataEvent, TreeDataModel, TreeKeyEvent } from "./tree.d
 import { TreeSubject } from "./tree.subject";
 import "./tree-style.scss";
 
-interface props<T> {
+interface props<T = unknown> {
   data: TreeDataModel<T>
   render?: (renderProps: RenderTree<T>) => JSX.Element
   onChangeForDelete?: (id: string) => void
   treeNodeService: TreeSubject<TreeDataEvent<T>>
   initialClassName?: string
+  complete_subsititute_row_contend?:boolean
+  arrayKeysEvents?:TreeKeyEvent[]
 }
 
-function TreeNode<T>({ onChangeForDelete, data, render, treeNodeService, initialClassName }: props<T>) {
+function TreeNode<T = unknown>({ onChangeForDelete, data, render, treeNodeService, initialClassName, complete_subsititute_row_contend,arrayKeysEvents }: props<T>) {
   const [datatree, setDataTree] = useState<TreeDataModel<T>>(data)
 
   let suscriberResultAdd$: any
@@ -70,10 +72,12 @@ function TreeNode<T>({ onChangeForDelete, data, render, treeNodeService, initial
     setDataTree({ ...datatree })
   }
 
-  const treeEventData: TreeDataEvent<T> = new TreeDataEvent<T>(TreeKeyEvent.Delete, TreeKeyEvent.ConfirmationDelete, datatree)
+  const handleclikActionKey= (treeEventData: TreeKeyEvent) => {
+          console.log('EJECUTA ACCION NUEVA', treeEventData)
+          return new TreeDataEvent<T>(treeEventData, TreeKeyEvent.ConfirmationDelete, datatree)
+  }
 
   const onChange = (treeEventData: TreeDataEvent<T>) => {
-
     switch (treeEventData.event) {
       case TreeKeyEvent.toggleExpand:
         handleclikChangeOpen()
@@ -85,9 +89,9 @@ function TreeNode<T>({ onChangeForDelete, data, render, treeNodeService, initial
         handleClikDeleteNode()
         break;
       default:
+        
         break;
     }
-
     return treeEventData
   }
 
@@ -114,10 +118,28 @@ function TreeNode<T>({ onChangeForDelete, data, render, treeNodeService, initial
         <div className="ux-control">
           <button className="ux-button" onClick={() => handleClikAddNode()} >ADD</button>
           <button className="ux-button" onClick={() => handleClikDeleteNode()} >DEL</button>
+          {arrayKeysEvents?.map((item)=>{
+           return(<button key={item} className="ux-button" onClick={() => handleclikActionKey(item)} >{item}</button>) 
+          })}
         </div>
       </div>}
 
-      {render && <div className="ux-cotainer-row">
+      {!complete_subsititute_row_contend && render && <div className="ux-cotainer-row">
+        <div className="ux-control">
+          {datatree.hasChildren && <button className="ux-button" onClick={() => handleclikChangeOpen()} >+</button>}
+          {!datatree.hasChildren && <div className="ux-item-control" ></div>}
+        </div>
+        <div className="ux-item-contend">
+            {render(treeEvent)}
+        </div>
+        <div className="ux-control">
+          <button className="ux-button" onClick={() => handleClikAddNode()} >ADD</button>
+          <button className="ux-button" onClick={() => handleClikDeleteNode()} >DEL</button>
+        </div>
+      </div>}
+
+
+      {complete_subsititute_row_contend && render && <div className="ux-cotainer-row">
         <div className="ux-item-contend">
           {render(treeEvent)}
         </div>
@@ -133,6 +155,8 @@ function TreeNode<T>({ onChangeForDelete, data, render, treeNodeService, initial
               render={render}
               onChangeForDelete={onChangeForDeleteRecibed}
               treeNodeService={treeNodeService}
+              complete_subsititute_row_contend={complete_subsititute_row_contend}
+              arrayKeysEvents={arrayKeysEvents}
             />
           )
         })}
