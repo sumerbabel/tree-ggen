@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import { TreeData, TreeDataModel, TreeEvent } from "./tree.data.interface";
+import { RenderTree, TreeDataEvent, TreeDataModel, TreeKeyEvent } from "./tree.data.interface";
 import { TreeSubject } from "./tree.subject";
 import "./tree-style.scss";
 
 interface props<T> {
   data: TreeDataModel<T>
-  render?: (dataRender: any) => JSX.Element
+  render?: (renderProps: RenderTree<T>) => JSX.Element
   onChangeForDelete?: (id: string) => void
-  treeNodeService: TreeSubject<TreeData<T>>
-  initialClassName?:string
+  treeNodeService: TreeSubject<TreeDataEvent<T>>
+  initialClassName?: string
 }
 
-function TreeNode<T>({ onChangeForDelete, data, render, treeNodeService,initialClassName }: props<T>) {
+function TreeNode<T>({ onChangeForDelete, data, render, treeNodeService, initialClassName }: props<T>) {
   const [datatree, setDataTree] = useState<TreeDataModel<T>>(data)
 
   let suscriberResultAdd$: any
@@ -21,12 +21,12 @@ function TreeNode<T>({ onChangeForDelete, data, render, treeNodeService,initialC
     if (!datatree.hasOwnProperty('children') && !Array.isArray(datatree['children'])) {
       datatree['children'] = []
     }
-    const newNode = createNewNode(datatree.level + 1, datatree.children? datatree.children.length:0 + 1)
-
-    treeNodeService.next({ event: TreeEvent.Create, eventConfirmation: TreeEvent.ConfirmationCreate, data: newNode })
+    const newNode = createNewNode(datatree.level + 1, datatree.children ? datatree.children.length : 0 + 1)
+    const treeDataEvent = new TreeDataEvent<T>(TreeKeyEvent.Create, TreeKeyEvent.ConfirmationCreate, newNode)
+    treeNodeService.next(treeDataEvent)
 
     suscriberResultAdd$ = treeNodeService.subscribe((data) => {
-      if (data.event === TreeEvent.ConfirmationCreate) {
+      if (data.event === TreeKeyEvent.ConfirmationCreate) {
         datatree.children?.push(newNode)
         datatree.hasChildren = true
         setDataTree({ ...datatree })
@@ -35,8 +35,8 @@ function TreeNode<T>({ onChangeForDelete, data, render, treeNodeService,initialC
     })
   }
 
-  const createNewNode = (nivel: number, orden: number):TreeDataModel<T> => {
-    return { id: uuidv4(), label: uuidv4() + nivel + '.' + orden, parentId: datatree.id, isOpen: true, level: nivel,hasChildren:false, data:{}as T}
+  const createNewNode = (nivel: number, orden: number): TreeDataModel<T> => {
+    return { id: uuidv4(), label: uuidv4() + nivel + '.' + orden, parentId: datatree.id, isOpen: true, level: nivel, hasChildren: false, data: {} as T }
   }
 
   const handleClikDeleteNode = () => {
@@ -48,10 +48,11 @@ function TreeNode<T>({ onChangeForDelete, data, render, treeNodeService,initialC
   let suscriberTreeNodeDeleteResultService$: any
   const onChangeForDeleteRecibed = (retorno: any) => {
     if (datatree.hasOwnProperty('children') && Array.isArray(datatree['children'])) {
-      treeNodeService.next({ event: TreeEvent.Delete, eventConfirmation: TreeEvent.ConfirmationDelete, data: retorno })
+      const treeDataEvent = new TreeDataEvent<T>(TreeKeyEvent.Delete, TreeKeyEvent.ConfirmationDelete, retorno)
+      treeNodeService.next(treeDataEvent)
       suscriberTreeNodeDeleteResultService$ = treeNodeService.subscribe((data) => {
-        
-        if (data.event === TreeEvent.ConfirmationDelete) {
+
+        if (data.event === TreeKeyEvent.ConfirmationDelete) {
           datatree['children'] = datatree['children']?.filter((item: any) => item.id != retorno)
           if (datatree['children']?.length === 0) {
             datatree.hasChildren = false
@@ -60,38 +61,68 @@ function TreeNode<T>({ onChangeForDelete, data, render, treeNodeService,initialC
           if (suscriberTreeNodeDeleteResultService$) { suscriberTreeNodeDeleteResultService$() }
         }
       })
-      
+
     }
   }
-  
+
   const handleclikChangeOpen = () => {
     datatree.isOpen = !datatree.isOpen
     setDataTree({ ...datatree })
   }
 
+  const treeEventData: TreeDataEvent<T> = new TreeDataEvent<T>(TreeKeyEvent.Delete, TreeKeyEvent.ConfirmationDelete, datatree)
+
+  const onChange = (treeEventData: TreeDataEvent<T>) => {
+
+    switch (treeEventData.event) {
+      case TreeKeyEvent.toggleExpand:
+        handleclikChangeOpen()
+        break;
+      case TreeKeyEvent.Create:
+        handleClikAddNode()
+        break;
+      case TreeKeyEvent.Delete:
+        handleClikDeleteNode()
+        break;
+      default:
+        break;
+    }
+
+    return treeEventData
+  }
+
+  const treeEvent: RenderTree<T> = { onChange, data: datatree } as RenderTree<T>
+
   useEffect(() => {
     return () => {
-      if (suscriberResultAdd$ ) { suscriberResultAdd$() }
-      if (suscriberTreeNodeDeleteResultService$ ) { suscriberTreeNodeDeleteResultService$() }
+      if (suscriberResultAdd$) { suscriberResultAdd$() }
+      if (suscriberTreeNodeDeleteResultService$) { suscriberTreeNodeDeleteResultService$() }
     }
   }, [])
 
   return (
     <li key={datatree.id} className={initialClassName}>
-      <div className="ux-cotainer-row">
+
+      {!render && <div className="ux-cotainer-row">
         <div className="ux-control">
           {datatree.hasChildren && <button className="ux-button" onClick={() => handleclikChangeOpen()} >+</button>}
           {!datatree.hasChildren && <div className="ux-item-control" ></div>}
         </div>
         <div className="ux-item-contend">
-          {!render && datatree.label}
-          {render && render(datatree)}
+          {datatree.label}
         </div>
         <div className="ux-control">
           <button className="ux-button" onClick={() => handleClikAddNode()} >ADD</button>
           <button className="ux-button" onClick={() => handleClikDeleteNode()} >DEL</button>
         </div>
-      </div>
+      </div>}
+
+      {render && <div className="ux-cotainer-row">
+        <div className="ux-item-contend">
+          {render(treeEvent)}
+        </div>
+      </div>}
+
 
       {datatree.hasChildren && <ul>
         {datatree.isOpen && datatree.hasChildren && datatree.children?.map((child: any) => {

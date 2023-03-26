@@ -1,19 +1,19 @@
 import { useEffect } from "react";
 import TreeNode from "./tree-node";
 import "./tree-style.scss";
-import { TreeData, TreeDataModel, TreeEvent } from "./tree.data.interface";
+import { RenderTree, TreeDataEvent, TreeDataModel, TreeKeyEvent } from "./tree.data.interface";
 import { TreeSubject } from "./tree.subject";
 
-interface props<T> {
-	onChange: (treeEventData: TreeData<T>, subject:TreeSubject<TreeData<T>>) => void
+export interface propsTree<T> {
+	onChange: (treeEventData: TreeDataEvent<T>, subject:TreeSubject<TreeDataEvent<T>>) => void
 	data: TreeDataModel<T>
-	render?: (data: any) => JSX.Element
+	render?: (renderProps: RenderTree<T>) => JSX.Element
 }
 
-function Tree<T>({ onChange, data, render }: props<T>) {
-	const treeNodeService = new TreeSubject<TreeData<T>>()
-	const subscription$ = treeNodeService.subscribe((treeData: TreeData<T>) => {
-		if (treeData.event === TreeEvent.Create || treeData.event === TreeEvent.Delete || treeData.event === TreeEvent.Update || treeData.event === TreeEvent.Read) {
+function Tree<T>({ onChange, data, render }: propsTree<T>) {
+	const treeNodeService = new TreeSubject<TreeDataEvent<T>>()
+	const subscription$ = treeNodeService.subscribe((treeData: TreeDataEvent<T>) => {
+		if (treeData.event === TreeKeyEvent.Create || treeData.event === TreeKeyEvent.Delete || treeData.event === TreeKeyEvent.Update || treeData.event === TreeKeyEvent.Read) {
 			onChange( treeData,
 				treeNodeService 
 			)
