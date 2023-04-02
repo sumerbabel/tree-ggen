@@ -10,11 +10,12 @@ interface props<T = unknown> {
   onChangeForDelete?: (id: string) => void
   treeNodeService: TreeSubject<TreeDataEvent<T>>
   initialClassName?: string
-  complete_subsititute_row_contend?:boolean
+  subsititute_row_contend?:boolean
   arrayKeysEvents?:TreeKeyEvent[]
+  confirmationChanges:boolean
 }
 
-function TreeNode<T = unknown>({ onChangeForDelete, data, render, treeNodeService, initialClassName, complete_subsititute_row_contend,arrayKeysEvents }: props<T>) {
+function TreeNode<T = unknown>({ onChangeForDelete, data, render, treeNodeService, initialClassName, subsititute_row_contend,arrayKeysEvents, confirmationChanges}: props<T>) {
   const [datatree, setDataTree] = useState<TreeDataModel<T>>(data)
 
   let suscriberResultAdd$: any
@@ -27,14 +28,22 @@ function TreeNode<T = unknown>({ onChangeForDelete, data, render, treeNodeServic
     const treeDataEvent = new TreeDataEvent<T>(TreeKeyEvent.Create, TreeKeyEvent.ConfirmationCreate, newNode)
     treeNodeService.next(treeDataEvent)
 
-    suscriberResultAdd$ = treeNodeService.subscribe((data) => {
-      if (data.event === TreeKeyEvent.ConfirmationCreate) {
-        datatree.children?.push(newNode)
-        datatree.hasChildren = true
-        setDataTree({ ...datatree })
-        if (suscriberResultAdd$) { suscriberResultAdd$() }
-      }
-    })
+    if (confirmationChanges=== false){
+      datatree.children?.push(newNode)
+      datatree.hasChildren = true
+      setDataTree({ ...datatree })
+    }
+
+    if (confirmationChanges){
+      suscriberResultAdd$ = treeNodeService.subscribe((data) => {
+        if (data.event === TreeKeyEvent.ConfirmationCreate) {
+          datatree.children?.push(newNode)
+          datatree.hasChildren = true
+          setDataTree({ ...datatree })
+          if (suscriberResultAdd$) { suscriberResultAdd$() }
+        }
+      })
+    }
   }
 
   const createNewNode = (nivel: number, orden: number): TreeDataModel<T> => {
@@ -52,17 +61,28 @@ function TreeNode<T = unknown>({ onChangeForDelete, data, render, treeNodeServic
     if (datatree.hasOwnProperty('children') && Array.isArray(datatree['children'])) {
       const treeDataEvent = new TreeDataEvent<T>(TreeKeyEvent.Delete, TreeKeyEvent.ConfirmationDelete, retorno)
       treeNodeService.next(treeDataEvent)
-      suscriberTreeNodeDeleteResultService$ = treeNodeService.subscribe((data) => {
 
-        if (data.event === TreeKeyEvent.ConfirmationDelete) {
-          datatree['children'] = datatree['children']?.filter((item: any) => item.id != retorno)
-          if (datatree['children']?.length === 0) {
-            datatree.hasChildren = false
-          }
-          setDataTree({ ...datatree })
-          if (suscriberTreeNodeDeleteResultService$) { suscriberTreeNodeDeleteResultService$() }
+      if (confirmationChanges=== false){
+        datatree['children'] = datatree['children']?.filter((item: any) => item.id != retorno)
+        if (datatree['children']?.length === 0) {
+          datatree.hasChildren = false
         }
-      })
+        setDataTree({ ...datatree })
+      }
+
+      if (confirmationChanges){
+        suscriberTreeNodeDeleteResultService$ = treeNodeService.subscribe((data) => {
+
+          if (data.event === TreeKeyEvent.ConfirmationDelete) {
+            datatree['children'] = datatree['children']?.filter((item: any) => item.id != retorno)
+            if (datatree['children']?.length === 0) {
+              datatree.hasChildren = false
+            }
+            setDataTree({ ...datatree })
+            if (suscriberTreeNodeDeleteResultService$) { suscriberTreeNodeDeleteResultService$() }
+          }
+        })
+      }
 
     }
   }
@@ -88,8 +108,12 @@ function TreeNode<T = unknown>({ onChangeForDelete, data, render, treeNodeServic
       case TreeKeyEvent.Delete:
         handleClikDeleteNode()
         break;
+      case TreeKeyEvent.Update:
+          setDataTree(treeEventData.data)
+          treeNodeService.next(treeEventData)
+          break;  
       default:
-        
+        console.log('defualt event key action')
         break;
     }
     return treeEventData
@@ -124,7 +148,7 @@ function TreeNode<T = unknown>({ onChangeForDelete, data, render, treeNodeServic
         </div>
       </div>}
 
-      {!complete_subsititute_row_contend && render && <div className="ux-cotainer-row">
+      {!subsititute_row_contend && render && <div className="ux-cotainer-row">
         <div className="ux-control">
           {datatree.hasChildren && <button className="ux-button" onClick={() => handleclikChangeOpen()} >+</button>}
           {!datatree.hasChildren && <div className="ux-item-control" ></div>}
@@ -139,7 +163,7 @@ function TreeNode<T = unknown>({ onChangeForDelete, data, render, treeNodeServic
       </div>}
 
 
-      {complete_subsititute_row_contend && render && <div className="ux-cotainer-row">
+      {subsititute_row_contend && render && <div className="ux-cotainer-row">
         <div className="ux-item-contend">
           {render(treeEvent)}
         </div>
@@ -155,8 +179,9 @@ function TreeNode<T = unknown>({ onChangeForDelete, data, render, treeNodeServic
               render={render}
               onChangeForDelete={onChangeForDeleteRecibed}
               treeNodeService={treeNodeService}
-              complete_subsititute_row_contend={complete_subsititute_row_contend}
+              subsititute_row_contend={subsititute_row_contend}
               arrayKeysEvents={arrayKeysEvents}
+              confirmationChanges={confirmationChanges}
             />
           )
         })}

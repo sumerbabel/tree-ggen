@@ -5,19 +5,21 @@ import { RenderTree, TreeDataEvent, TreeDataModel, TreeKeyEvent } from "./tree.d
 import { TreeSubject } from "./tree.subject";
 
 export interface propsTree<T = unknown> {
-	onChange: (treeEventData: TreeDataEvent<T>, subject: TreeSubject<TreeDataEvent<T>>) => void
+	onChange?: (treeEventData: TreeDataEvent<T>, subject: TreeSubject<TreeDataEvent<T>>) => void
 	data: TreeDataModel<T>
 	render?: (renderProps: RenderTree<T>) => JSX.Element
 	arrayKeysEvents?:TreeKeyEvent[]
-	complete_subsititute_row_contend?:boolean
+	subsititute_row_contend?:boolean
+	confirmationChanges?:boolean
 }
 
-function Tree<T = unknown>({ onChange, data, render, complete_subsititute_row_contend = true,arrayKeysEvents=[] }: propsTree<T>) {
-
+function Tree<T = unknown>({ onChange, data, render, subsititute_row_contend = true,arrayKeysEvents=[] ,confirmationChanges=false}: propsTree<T>) {
+    
+	
 	const treeNodeService = new TreeSubject<TreeDataEvent<T>>()
 	const subscription$ = treeNodeService.subscribe((treeData: TreeDataEvent<T>) => {
 		if (treeData.event === TreeKeyEvent.Create || treeData.event === TreeKeyEvent.Delete || treeData.event === TreeKeyEvent.Update || treeData.event === TreeKeyEvent.Read) {
-			onChange(treeData, treeNodeService)
+			if(onChange){onChange(treeData, treeNodeService)}
 		}
 	})
 
@@ -25,7 +27,7 @@ function Tree<T = unknown>({ onChange, data, render, complete_subsititute_row_co
 
 	return (
 		<ul className="wtree">
-			<TreeNode <T> data={data} render={render} treeNodeService={treeNodeService} initialClassName={"no-first"} complete_subsititute_row_contend ={complete_subsititute_row_contend} arrayKeysEvents={arrayKeysEvents} />
+			<TreeNode <T> data={data} render={render} treeNodeService={treeNodeService} initialClassName={"no-first"} subsititute_row_contend ={subsititute_row_contend} confirmationChanges={confirmationChanges}  arrayKeysEvents={arrayKeysEvents} />
 		</ul>
 	)
 }
