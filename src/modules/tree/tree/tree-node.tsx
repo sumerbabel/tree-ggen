@@ -31,6 +31,7 @@ function TreeNode<T = unknown>({ onChangeForDelete, data, render, treeNodeServic
     if (confirmationChanges=== false){
       datatree.children?.push(newNode)
       datatree.hasChildren = true
+      datatree.isOpen=true
       setDataTree({ ...datatree })
     }
 
@@ -39,6 +40,7 @@ function TreeNode<T = unknown>({ onChangeForDelete, data, render, treeNodeServic
         if (data.event === TreeKeyEvent.ConfirmationCreate) {
           datatree.children?.push(newNode)
           datatree.hasChildren = true
+          datatree.isOpen=true
           setDataTree({ ...datatree })
           if (suscriberResultAdd$) { suscriberResultAdd$() }
         }
@@ -133,7 +135,7 @@ function TreeNode<T = unknown>({ onChangeForDelete, data, render, treeNodeServic
 
       {!render && <div className="ux-cotainer-row">
         <div className="ux-control">
-          {datatree.hasChildren && <button className="ux-button" onClick={() => handleclikChangeOpen()} >+</button>}
+          {datatree.hasChildren && <button className="ux-button" onClick={() => handleclikChangeOpen()} >{datatree.isOpen&&'-'}{!datatree.isOpen && '+'}</button>}
           {!datatree.hasChildren && <div className="ux-item-control" ></div>}
         </div>
         <div className="ux-item-contend">
@@ -189,5 +191,4 @@ function TreeNode<T = unknown>({ onChangeForDelete, data, render, treeNodeServic
     </li>
   )
 }
-
 export default TreeNode;

@@ -5,6 +5,9 @@ import Tree from './modules/tree/tree/tree'
 import { DATA } from './modules/tree/tree/tree.data'
 import { RenderTree, TreeDataEvent, TreeDataModel, TreeKeyEvent } from './modules/tree/tree/tree.data.interface'
 import { TreeSubject } from './modules/tree/tree/tree.subject'
+import Editor from './modules/lexical/lexical-comp'
+import { EditableComponent } from './modules/edit-component/edit-component'
+
 
 function App() {
   const data: any = DATA
@@ -30,10 +33,11 @@ function App() {
 
   return (
     <>
-      <Tree <string> data={datatree} onChange={onChangeRecibedF} render={External} subsititute_row_contend={true} arrayKeysEvents={arrayKeysEvents} />
+      {/* <Tree <string> data={datatree} onChange={onChangeRecibedF} render={External} subsititute_row_contend={true} arrayKeysEvents={arrayKeysEvents} />
       <Tree data={data} onChange={onChangeRecibedF2} arrayKeysEvents={arrayKeysEvents} />
       <Tree data={data3} />
-      <button onClick={viewdatamodel} >agregar</button>
+      <button onClick={viewdatamodel} >agregar</button> */}
+      <EditableComponent></EditableComponent>
     </>
   )
 }
@@ -74,6 +78,17 @@ export function External(props: RenderTree<string>) {
     props.onChange(new TreeDataEvent<string>(TreeKeyEvent.Delete, TreeKeyEvent.ConfirmationUpdate, props.data))
   }
 
+  //-------
+  const [text, setText] = useState("");
+ let valor =''
+  const handleChange2=(event:any)=> {
+    console.log(event)
+    valor = event.target.innerText
+    setText(valor);
+    valor=''
+  }
+
+
   return (
     <>
      <div className="ux-external"> external {data.label}
@@ -93,23 +108,19 @@ export function External(props: RenderTree<string>) {
         onChange={handleChange} />
    
     </div>
-    <div className="ux-external"> external2 {data.label}
-      <button onClick={toggleExpand} >expandir2</button>
-      <button onClick={createNode} >agregar2</button>
-      <button onClick={deleteNode} >Eliminar2</button>
-      <input type="text"
-        id="messagex"
-        name="messagex"
-        value={data.data}
-        onChange={handleChangeId} />
 
-      <input type="text"
-        id="message"
-        name="message"
-        value={data.label}
-        onChange={handleChange} />
-   
+    <div className='div-edit1'  onInput={handleChange2}>
+        {<span>{text}</span>}
+    <div className='div-edit'
+      contentEditable="true"
+      onInput={handleChange2}
+    ></div>
     </div>
+
+
+
+
+
     </>
    )
 }

@@ -1,0 +1,16 @@
+.edit-comp1{
+    border: solid 1px rebeccapurple;
+    min-height: 40px;
+    width: 100%;
+    margin: 3px;
+    box-sizing: border-box;
+}
+
+.edit-comp{
+    border: solid 1px rgb(17, 193, 23);
+    min-height: 20px;
+    width: 100%;
+    margin: 3px;
+    box-sizing: border-box;
+}
+
