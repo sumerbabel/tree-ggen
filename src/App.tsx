@@ -7,6 +7,7 @@ import { RenderTree, TreeDataEvent, TreeDataModel, TreeKeyEvent } from './module
 import { TreeSubject } from './modules/tree/tree/tree.subject'
 import Editor from './modules/lexical/lexical-comp'
 import { EditableComponent } from './modules/edit-component/edit-component'
+import ClipboardComponent from './modules/copy-paste-clipboard/copy-paste'
 
 
 function App() {
@@ -34,10 +35,8 @@ function App() {
   return (
     <>
       {/* <Tree <string> data={datatree} onChange={onChangeRecibedF} render={External} subsititute_row_contend={true} arrayKeysEvents={arrayKeysEvents} />
-      <Tree data={data} onChange={onChangeRecibedF2} arrayKeysEvents={arrayKeysEvents} />
-      <Tree data={data3} />
-      <button onClick={viewdatamodel} >agregar</button> */}
-      <EditableComponent></EditableComponent>
+      <EditableComponent></EditableComponent> */}
+      <ClipboardComponent></ClipboardComponent>
     </>
   )
 }

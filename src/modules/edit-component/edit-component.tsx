@@ -31,13 +31,18 @@ export function EditableComponent() {
       `function add(a, b) {\n  return a + b;\n}`
     );
 
+    const handleChangeCode =(evn:any)=>{
+      console.log('evn.target.value',evn.target.value)
+      setCode(evn.target.value)
+    }
+
     return (
       <div className="edit-comp1">
             <CodeEditor
       value={code}
       language="js"
       placeholder="Please enter JS code."
-      onChange={(evn) => setCode(evn.target.value)}
+      onChange={handleChangeCode}
       padding={15}
       style={{
         fontSize: 12,
@@ -45,7 +50,7 @@ export function EditableComponent() {
         fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
       }}
     />
-    
+     
       <div className="edit-comp" contentEditable="true" suppressContentEditableWarning={true}
            onInput={onInputChange}>
             {childArrayComp.map(item=>{
