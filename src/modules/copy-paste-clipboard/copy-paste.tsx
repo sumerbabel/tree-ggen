@@ -59,8 +59,56 @@ function ClipboardComponent() {
     }
   }, [nodeElmenteClip])
 
+
+  // drag and drop section :
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('1 handleDragEnter entra area',e);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('3 handleDragLeave sale area',e);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+   // console.log('2 handleDragOver se mantiene en el area',e);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    console.log('handleDrop',e.dataTransfer.files);
+
+    const items =  e.dataTransfer.files;
+    for (let i = 0; i < items.length; i++) {
+      const item: any = items[i]
+      console.log('item',item)
+      const fileBlob = item
+ 
+      if (item.type.indexOf('image') !== -1) {
+        fileBlob && nodeElmenteClip.push({ id: uuidv4(), type: 'image', data: URL.createObjectURL(fileBlob),dataFile: fileBlob})
+      } else {
+        fileBlob && nodeElmenteClip.push({ id: uuidv4(), type: 'file', data: fileBlob.name,dataFile: fileBlob})
+      }
+    }
+    nodeElmenteClip.push({ id: uuidv4(), type: 'text', data: ' ' })
+    setNodeElmenteClip([...nodeElmenteClip])
+
+  };
+
   return (
-    <div className='su-clipboard' contentEditable={true} suppressContentEditableWarning={true} onPaste={handlePaste} ref={ref}>
+    <div className='su-clipboard' contentEditable={true} suppressContentEditableWarning={true} onPaste={handlePaste} ref={ref}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+    >
       {nodeElmenteClip.map((item, index) => {
         return (
           <>
