@@ -1,14 +1,12 @@
 
 import { useState } from 'react'
 import './App.css'
-import Tree from './modules/tree/tree/tree'
 import { DATA } from './modules/tree/tree/tree.data'
 import { RenderTree, TreeDataEvent, TreeDataModel, TreeKeyEvent } from './modules/tree/tree/tree.data.interface'
 import { TreeSubject } from './modules/tree/tree/tree.subject'
-import Editor from './modules/lexical/lexical-comp'
-import { EditableComponent } from './modules/edit-component/edit-component'
-import ClipboardComponent from './modules/copy-paste-clipboard/copy-paste'
-
+import ClipboardComponent, { PropsNodeElementClip } from './modules/copy-paste-clipboard/copy-paste'
+import { v4 as uuidv4 } from 'uuid';
+import Spinner from './modules/spinner/spinner'
 
 function App() {
   const data: any = DATA
@@ -32,11 +30,14 @@ function App() {
     console.log('data2', datatree)
   }
 
+  const dataClip:PropsNodeElementClip[] =[{id: uuidv4(), type: 'text', data: 'TEXTO CARGADO'},{id: uuidv4(), type: 'text', data: 'TEXTO CARGADO 2'}] 
+
   return (
     <>
+    <Spinner></Spinner>
       {/* <Tree <string> data={datatree} onChange={onChangeRecibedF} render={External} subsititute_row_contend={true} arrayKeysEvents={arrayKeysEvents} />
       <EditableComponent></EditableComponent> */}
-      <ClipboardComponent></ClipboardComponent>
+      <ClipboardComponent dataClipboard={dataClip}></ClipboardComponent>
     </>
   )
 }

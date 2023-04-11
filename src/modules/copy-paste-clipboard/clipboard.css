@@ -1,6 +1,6 @@
 .su-clipboard{
     background-color: beige;
-    width: 100%;
-    min-height: 100px;
+    width: auto;
+    min-height: 150px;
     padding: 5px;
 }
