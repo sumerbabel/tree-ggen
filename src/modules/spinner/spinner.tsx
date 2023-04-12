@@ -1,8 +1,4 @@
-import {useState } from 'react';
 import './spinner.scss'
-
-
-
 function Spinner({message ='Procesando ...'}) {
   return (
 <div  className="loader-content">
@@ -12,7 +8,6 @@ function Spinner({message ='Procesando ...'}) {
   </div>
 </div>
   )
-
 };
 
 export default Spinner

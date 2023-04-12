@@ -18,23 +18,29 @@ function ClipboardComponent({ dataClipboard = [], onChange }: propsClipboard) {
 
   const [nodeElmenteClip, setNodeElmenteClip] = useState<PropsNodeElementClip[]>(dataClipboard);
 
-  const initialComponentList:any[] =[]
-  dataClipboard.forEach(item => {
 
-    switch (item.type) {
-      case 'image':
-        initialComponentList.push(ImgeComponent(item.id, item.data))
-        break;
-      case 'text':
-        initialComponentList.push(TextComponent(item.id, item.data))
-        break;
-      case 'file':
-        initialComponentList.push(FileComponent(item.id, item.data))
-        break;
-    }
-  })
 
-  const [componentList, setComponentList] = useState<any[]>(initialComponentList);
+  const [componentList, setComponentList] = useState<any[]>(()=>{
+    const initialComponentList:any[] =[]
+    dataClipboard.forEach(item => {
+  
+      switch (item.type) {
+        case 'image':
+          initialComponentList.push(ImgeComponent(item.id, item.data))
+          break;
+        case 'text':
+          initialComponentList.push(TextComponent(item.id, item.data))
+          break;
+        case 'file':
+          initialComponentList.push(FileComponent(item.id, item.data))
+          break;
+      }
+    })
+
+    return initialComponentList
+  });
+
+  
   const referenceDivEditable = useRef(document.createElement("div"))
 
 
