@@ -1,12 +1,12 @@
 import './spinner.scss'
-function Spinner({message ='Procesando ...'}) {
+function Spinner ({ message = 'Procesando ...' }): JSX.Element {
   return (
-<div  className="loader-content">
-  <div className="ui-loader">
-    <div className="animationStripes"> </div>
-    <span className ="ui-loader-message"> {message}</span>
-  </div>
-</div>
+    <div className='loader-content'>
+      <div className='ui-loader'>
+        <div className='animationStripes'> </div>
+        <span className='ui-loader-message'> {message}</span>
+      </div>
+    </div>
   )
 };
 

@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react'
 import './clipboard.css'
-import { v4 as uuidv4 } from 'uuid';
-import { spinnerService } from '../spinner/sppimer.service';
-
+import { v4 as uuidv4 } from 'uuid'
+import { spinnerService } from '../spinner/sppimer.service'
 
 export interface PropsNodeElementClip {
   id: string
@@ -16,51 +15,38 @@ export interface propsClipboard {
   onChange?: () => void
 }
 
+function ClipboardComponent ({ dataClipboard = [], onChange }: propsClipboard): JSX.Element {
+  const [nodeElmenteClip, setNodeElmenteClip] = useState<PropsNodeElementClip[]>(dataClipboard)
 
-
-function ClipboardComponent({ dataClipboard = [], onChange }: propsClipboard) {
-
-  const [nodeElmenteClip, setNodeElmenteClip] = useState<PropsNodeElementClip[]>(dataClipboard);
-
-
-
-  const [componentList, setComponentList] = useState<any[]>(()=>{
-    const initialComponentList:any[] =[]
+  const [componentList, setComponentList] = useState<any[]>(() => {
+    const initialComponentList: any[] = []
     dataClipboard.forEach(item => {
-  
       switch (item.type) {
         case 'image':
           initialComponentList.push(ImgeComponent(item.id, item.data))
-          break;
+          break
         case 'text':
           initialComponentList.push(TextComponent(item.id, item.data))
-          break;
+          break
         case 'file':
           initialComponentList.push(FileComponent(item.id, item.data))
-          break;
+          break
       }
     })
 
     return initialComponentList
-  });
+  })
 
-  
-  const referenceDivEditable = useRef(document.createElement("div"))
+  const referenceDivEditable = useRef(document.createElement('div'))
 
-
-  const handlePaste = async (event: React.ClipboardEvent<HTMLDivElement>) => {
-    console.log('llega al paste')
+  const handlePaste = (event: React.ClipboardEvent<HTMLDivElement>): void => {
     spinnerService.openSpinner()
-    event.preventDefault();
-    const clipboardData = event.clipboardData;
-    if (clipboardData) {
+    event.preventDefault()
+    const clipboardData = event.clipboardData
+    if (clipboardData !== undefined) {
       const textClip = clipboardData.getData('Text').trim()
-      console.log('textClip', textClip)
-      if (textClip) {
-
+      if (textClip !== undefined) {
         const arrayTextClip = textClip.split(/\r?\n/)
-        console.log('arrayTextClip', arrayTextClip)
-
         arrayTextClip.forEach(text => {
           const nodeClip: PropsNodeElementClip = { id: uuidv4(), type: 'text', data: text }
           nodeElmenteClip.push(nodeClip)
@@ -71,11 +57,11 @@ function ClipboardComponent({ dataClipboard = [], onChange }: propsClipboard) {
         setComponentList([...componentList])
       }
 
-      if (!textClip) {
-        const items = await clipboardData.items;
+      if (textClip === undefined) {
+        const items = clipboardData.items
         for (let i = 0; i < items.length; i++) {
           const item: any = items[i]
-          const fileBlob = await item.getAsFile()
+          const fileBlob = item.getAsFile()
           if (item.type.indexOf('image') !== -1) {
             const nodeClip: PropsNodeElementClip = { id: uuidv4(), type: 'image', data: URL.createObjectURL(fileBlob), dataFile: fileBlob }
             nodeElmenteClip.push(nodeClip)
@@ -97,32 +83,21 @@ function ClipboardComponent({ dataClipboard = [], onChange }: propsClipboard) {
 
     setTimeout(() => {
       spinnerService.closeSpinner()
-    }, 1000*5);
-    
-
+    }, 1000 * 5)
   }
 
   useEffect(() => {
-
     const ultimoNodo: any = referenceDivEditable.current.childNodes[referenceDivEditable.current.children.length - 1]
     if (ultimoNodo !== undefined) {
-
-
-      let range = document.createRange()
-      let sel = window.getSelection()
+      const range = document.createRange()
+      const sel = window.getSelection()
       let startNode = 2
-
-
       const longitudUltimoNodo: any = ultimoNodo?.childNodes[1]
-      console.log(ultimoNodo, 'ultimoNodo', longitudUltimoNodo, 'longitudUltimoNodo')
-      console.log('componentList', componentList)
       if (longitudUltimoNodo === undefined) {
         console.log('es indefinido')
         startNode = 1
       }
-      const ran = range.setStart(ultimoNodo, startNode)
-      console.log('ran', ran)
-      console.log('ran', ran)
+      range.setStart(ultimoNodo, startNode)
       range.collapse(true)
       sel?.removeAllRanges()
       sel?.addRange(range)
@@ -132,31 +107,30 @@ function ClipboardComponent({ dataClipboard = [], onChange }: propsClipboard) {
     }
   }, [componentList])
 
-
   // drag and drop section :
-  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('1 handleDragEnter entra area', e);
-  };
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>): void => {
+    e.preventDefault()
+    e.stopPropagation()
+    console.log('1 handleDragEnter entra area', e)
+  }
 
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('3 handleDragLeave sale area', e);
-  };
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>): void => {
+    e.preventDefault()
+    e.stopPropagation()
+    console.log('3 handleDragLeave sale area', e)
+  }
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>): void => {
+    e.preventDefault()
+    e.stopPropagation()
     // console.log('2 handleDragOver se mantiene en el area',e);
-  };
+  }
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>): void => {
+    e.preventDefault()
+    e.stopPropagation()
 
-    const files = e.dataTransfer.files;
+    const files = e.dataTransfer.files
     for (let i = 0; i < files.length; i++) {
       const fileBlob: any = files[i]
 
@@ -174,25 +148,25 @@ function ClipboardComponent({ dataClipboard = [], onChange }: propsClipboard) {
     componentList.push(TextComponent(uuidv4(), ' '))
     setComponentList([...componentList])
     setNodeElmenteClip([...nodeElmenteClip])
+  }
 
-  };
-
-  function TextComponent(id: string, data: string) {
+  function TextComponent (id: string, data: string): JSX.Element {
     return (<div key={id}> {data}</div>)
   }
 
-  function ImgeComponent(id: string, data: string) {
+  function ImgeComponent (id: string, data: string): JSX.Element {
     return (<img key={id} src={data} />)
   }
 
-  function FileComponent(id: string, data: string) {
+  function FileComponent (id: string, data: string): JSX.Element {
     return (<p key={id}> {data}</p>)
   }
 
   return (
-    <div className='su-clipboard'
-      contentEditable={true}
-      suppressContentEditableWarning={true}
+    <div
+      className='su-clipboard'
+      contentEditable
+      suppressContentEditableWarning
       onPaste={handlePaste}
       ref={referenceDivEditable}
       onDragEnter={handleDragEnter}
@@ -203,7 +177,6 @@ function ClipboardComponent({ dataClipboard = [], onChange }: propsClipboard) {
       {componentList.map(item => item)}
     </div>
   )
-
-};
+}
 
 export default ClipboardComponent
