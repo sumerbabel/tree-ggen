@@ -7,11 +7,20 @@ import { TreeSubject } from './modules/tree/tree/tree.subject'
 import ClipboardComponent, { PropsNodeElementClip } from './modules/copy-paste-clipboard/copy-paste'
 import { v4 as uuidv4 } from 'uuid';
 import Spinner from './modules/spinner/spinner'
+import { spinnerService } from './modules/spinner/sppimer.service'
+
 
 function App() {
   const data: any = DATA
   const data2: any = structuredClone(DATA)
   const data3: any = structuredClone(DATA)
+
+  const [isOpenSpinner, setIsOpenSpinner] =useState<boolean>(false)
+
+  spinnerService.getSpinnerSubject().subscribe((isOpen)=>{
+    console.log('llega al spinner service', isOpen)
+    setIsOpenSpinner(isOpen)
+  })
 
   const [datatree, setDataTree] = useState<TreeDataModel<string>>(data2)
 
@@ -34,7 +43,7 @@ function App() {
 
   return (
     <>
-    <Spinner></Spinner>
+   {isOpenSpinner && <Spinner></Spinner>} 
       {/* <Tree <string> data={datatree} onChange={onChangeRecibedF} render={External} subsititute_row_contend={true} arrayKeysEvents={arrayKeysEvents} />
       <EditableComponent></EditableComponent> */}
       <ClipboardComponent dataClipboard={dataClip}></ClipboardComponent>

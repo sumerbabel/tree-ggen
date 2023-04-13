@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './clipboard.css'
 import { v4 as uuidv4 } from 'uuid';
+import { spinnerService } from '../spinner/sppimer.service';
+
 
 export interface PropsNodeElementClip {
   id: string
@@ -13,6 +15,8 @@ export interface propsClipboard {
   dataClipboard: PropsNodeElementClip[]
   onChange?: () => void
 }
+
+
 
 function ClipboardComponent({ dataClipboard = [], onChange }: propsClipboard) {
 
@@ -45,6 +49,8 @@ function ClipboardComponent({ dataClipboard = [], onChange }: propsClipboard) {
 
 
   const handlePaste = async (event: React.ClipboardEvent<HTMLDivElement>) => {
+    console.log('llega al paste')
+    spinnerService.openSpinner()
     event.preventDefault();
     const clipboardData = event.clipboardData;
     if (clipboardData) {
@@ -88,6 +94,12 @@ function ClipboardComponent({ dataClipboard = [], onChange }: propsClipboard) {
         setNodeElmenteClip([...nodeElmenteClip])
       }
     }
+
+    setTimeout(() => {
+      spinnerService.closeSpinner()
+    }, 1000*5);
+    
+
   }
 
   useEffect(() => {

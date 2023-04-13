@@ -8,6 +8,7 @@ export class SubjectManager<T> {
   }
 
   setSubject(value:T) {
+ 
     this.subject$.next(value);
   }
 }
