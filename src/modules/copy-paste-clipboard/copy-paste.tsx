@@ -45,7 +45,7 @@ function ClipboardComponent ({ dataClipboard = [], onChange }: propsClipboard): 
     const clipboardData = event.clipboardData
     if (clipboardData !== undefined) {
       const textClip = clipboardData.getData('Text').trim()
-      if (textClip !== undefined) {
+      if (textClip !== '') {
         const arrayTextClip = textClip.split(/\r?\n/)
         arrayTextClip.forEach(text => {
           const nodeClip: PropsNodeElementClip = { id: uuidv4(), type: 'text', data: text }
@@ -57,7 +57,7 @@ function ClipboardComponent ({ dataClipboard = [], onChange }: propsClipboard): 
         setComponentList([...componentList])
       }
 
-      if (textClip === undefined) {
+      if (textClip === '') {
         const items = clipboardData.items
         for (let i = 0; i < items.length; i++) {
           const item: any = items[i]
@@ -94,7 +94,6 @@ function ClipboardComponent ({ dataClipboard = [], onChange }: propsClipboard): 
       let startNode = 2
       const longitudUltimoNodo: any = ultimoNodo?.childNodes[1]
       if (longitudUltimoNodo === undefined) {
-        console.log('es indefinido')
         startNode = 1
       }
       range.setStart(ultimoNodo, startNode)

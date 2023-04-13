@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import { DATA } from './modules/tree/tree/tree.data'
 import { RenderTree, TreeDataEvent, TreeDataModel, TreeKeyEvent } from './modules/tree/tree/tree.data.interface'
@@ -9,15 +9,20 @@ import { v4 as uuidv4 } from 'uuid'
 import Spinner from './modules/spinner/spinner'
 import { spinnerService } from './modules/spinner/sppimer.service'
 import Tree from './modules/tree/tree/tree'
+import { Route, Routes } from 'react-router-dom'
 
 function App (): JSX.Element {
   const data2: any = structuredClone(DATA)
   const [isOpenSpinner, setIsOpenSpinner] = useState<boolean>(false)
 
-  spinnerService.getSpinnerSubject().subscribe((isOpen) => {
-    console.log('llega al spinner service', isOpen)
-    setIsOpenSpinner(isOpen)
-  })
+  useEffect(() => {
+    const suscriber = spinnerService.getSpinnerSubject().subscribe((isOpen) => {
+      setIsOpenSpinner(isOpen)
+    })
+    return () => {
+      suscriber.unsubscribe()
+    }
+  }, [isOpenSpinner])
 
   const [datatree] = useState<TreeDataModel<string>>(data2)
 
@@ -41,8 +46,11 @@ function App (): JSX.Element {
   return (
     <>
       {isOpenSpinner && <Spinner />}
-      <Tree <string> data={datatree} onChange={onChangeRecibedF} render={External} subsitituteRowContend arrayKeysEvents={arrayKeysEvents} />
-      <ClipboardComponent dataClipboard={dataClip} />
+      <Routes>
+        <Route path='/' element={<Tree <string> data={datatree} onChange={onChangeRecibedF} render={External} subsitituteRowContend arrayKeysEvents={arrayKeysEvents} />} />
+        <Route path='/clip' element={<ClipboardComponent dataClipboard={dataClip} />} />
+      </Routes>
+      <div>footer</div>
     </>
   )
 }
