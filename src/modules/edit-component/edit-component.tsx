@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import CodeEditor from '@uiw/react-textarea-code-editor'
+import { modalService } from '../modal/modal.service'
 
 export function EditableComponent (): JSX.Element {
   const [childArrayComp, setDataEdit] = useState([{ id: uuidv4(), data: 'dato1' }])
@@ -31,6 +32,16 @@ export function EditableComponent (): JSX.Element {
     setCode(evn.target.value)
   }
 
+  const handleCLikModal = (): void => {
+    modalService.openModal(<EditableComponent />).subscribe((data) => {
+      console.log('data modal close', data)
+    })
+  }
+
+  const handleCLikClose = (): void => {
+    modalService.closeModal({ close: true, data: code })
+  }
+
   return (
     <div className='edit-comp1'>
       <CodeEditor
@@ -54,7 +65,8 @@ export function EditableComponent (): JSX.Element {
           return (<span className='span-comp' key={item.id}>{item.data}</span>)
         })}
       </div>
-
+      <button onClick={handleCLikModal}>Modal</button>
+      <button onClick={handleCLikClose}>CloseModal</button>
     </div>
 
   )

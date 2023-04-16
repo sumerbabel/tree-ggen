@@ -1,0 +1,23 @@
+$content-color: #272e31;
+
+.modal-content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  cursor: wait;
+  display: flex;
+  justify-content: center;
+  background-color: #1d252a96;
+}
+
+.modal-conteiner {
+  position: relative;
+  padding: 10px;
+  //height: 300px;
+  height: fit-content;
+  margin-top: 30px;
+  box-shadow: inset 0 -3em 3em rgba(0, 0, 0, 0.1), 0 0 0 2px rgb(255, 255, 255),
+    0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
+}

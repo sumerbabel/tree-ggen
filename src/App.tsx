@@ -10,10 +10,30 @@ import Spinner from './modules/spinner/spinner'
 import { spinnerService } from './modules/spinner/sppimer.service'
 import Tree from './modules/tree/tree/tree'
 import { Route, Routes } from 'react-router-dom'
+import Modal from './modules/modal/modal'
+import { modalService } from './modules/modal/modal.service'
 
 function App (): JSX.Element {
   const data2: any = structuredClone(DATA)
   const [isOpenSpinner, setIsOpenSpinner] = useState<boolean>(false)
+
+  const [modals, setModals] = useState<any[]>([])
+
+  useEffect(() => {
+    const suscriberModal = modalService.getModalSubject().subscribe((item) => {
+      if (item.isOpen) {
+        modals.push(item.element)
+      } else {
+        modals.pop()
+      }
+
+      setModals([...modals])
+    })
+
+    return () => {
+      suscriberModal.unsubscribe()
+    }
+  }, [modals])
 
   useEffect(() => {
     const suscriber = spinnerService.getSpinnerSubject().subscribe((isOpen) => {
@@ -46,6 +66,9 @@ function App (): JSX.Element {
   return (
     <>
       {isOpenSpinner && <Spinner />}
+      {modals.map((item, index) => {
+        return (<Modal key={index} item={item} />)
+      })}
       <Routes>
         <Route path='/' element={<Tree <string> data={datatree} onChange={onChangeRecibedF} render={External} subsitituteRowContend arrayKeysEvents={arrayKeysEvents} />} />
         <Route path='/clip' element={<ClipboardComponent dataClipboard={dataClip} />} />

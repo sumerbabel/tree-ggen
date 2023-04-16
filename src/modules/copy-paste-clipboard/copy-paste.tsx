@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import './clipboard.css'
 import { v4 as uuidv4 } from 'uuid'
 import { spinnerService } from '../spinner/sppimer.service'
+import { modalService } from '../modal/modal.service'
+import { EditableComponent } from '../edit-component/edit-component'
 
 export interface PropsNodeElementClip {
   id: string
@@ -161,20 +163,30 @@ function ClipboardComponent ({ dataClipboard = [], onChange }: propsClipboard): 
     return (<p key={id}> {data}</p>)
   }
 
+  const handleCLikModal = (): void => {
+    modalService.openModal(<EditableComponent />).subscribe((data) => {
+      console.log('data comp inicial', data)
+    })
+  }
+
   return (
-    <div
-      className='su-clipboard'
-      contentEditable
-      suppressContentEditableWarning
-      onPaste={handlePaste}
-      ref={referenceDivEditable}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
-    >
-      {componentList.map(item => item)}
-    </div>
+    <>
+      <div
+        className='su-clipboard'
+        contentEditable
+        suppressContentEditableWarning
+        onPaste={handlePaste}
+        ref={referenceDivEditable}
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+      >
+        {componentList.map(item => item)}
+      </div>
+
+      <button onClick={handleCLikModal}>Modal</button>
+    </>
   )
 }
 
