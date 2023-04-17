@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { modalService } from '../modal/modal.service'
 
 import Editor from './editor'
@@ -6,8 +6,11 @@ import Prism, { highlight, languages } from 'prismjs'
 import 'prismjs/components/prism-clike'
 import 'prismjs/components/prism-javascript'
 import 'prismjs/themes/prism.css'
+import { Subscription } from 'rxjs'
 
 export function EditableComponent (): JSX.Element {
+  let subscriptionModal: Subscription
+
   const onInputChange = (onInputEvent: any): void => {
     console.log('HTML', onInputEvent.target.innerHTML)
     console.log('TEXT', onInputEvent.target.innerText)
@@ -20,7 +23,7 @@ export function EditableComponent (): JSX.Element {
   }
 
   const handleCLikModal = (): void => {
-    modalService.openModal(<EditableComponent />).subscribe((data) => {
+    subscriptionModal = modalService.openModal(<EditableComponent />).subscribe((data: any) => {
       console.log('data modal close', data)
     })
   }
@@ -32,6 +35,10 @@ export function EditableComponent (): JSX.Element {
   const [code, setCode] = useState(
     'function add(a, b) {\n  return a + b;\n}'
   )
+
+  useEffect(() => {
+    return (subscriptionModal?.unsubscribe())
+  }, [code])
 
   return (
     <div>

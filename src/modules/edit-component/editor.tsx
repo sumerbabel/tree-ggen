@@ -5,7 +5,6 @@ import { Record } from './Record'
 type Padding<T> = T | { top?: T, right?: T, bottom?: T, left?: T }
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
-  // Props for the component
   value: string
   onValueChange: (value: string) => void
   highlight: (value: string) => string | React.ReactNode
@@ -14,8 +13,6 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
   ignoreTabKey: boolean
   padding: Padding<number | string>
   style?: React.CSSProperties
-
-  // Props for the textarea
   textareaId?: string
   textareaClassName?: string
   autoFocus?: boolean
@@ -32,14 +29,8 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
   onBlur?: React.FocusEventHandler<HTMLTextAreaElement>
   onKeyUp?: React.KeyboardEventHandler<HTMLTextAreaElement>
   onKeyDown?: React.KeyboardEventHandler<HTMLTextAreaElement>
-
-  // Props for the hightlighted code’s pre element
   preClassName?: string
 }
-
-// interface State {
-//   capture: boolean
-// }
 
 const KEYCODE_Y = 89
 const KEYCODE_Z = 90
@@ -92,7 +83,6 @@ const cssText = /* CSS */ `
 `
 
 export default function Editor (props: Props): JSX.Element {
-// const defaultProps = { tabSize: 2, insertSpaces: true, ignoreTabKey: false, padding: 0 }
   const [state, setState] = useState({ capture: true })
 
   useEffect(() => {
@@ -103,8 +93,6 @@ export default function Editor (props: Props): JSX.Element {
     const input = _input
 
     if (input == null) return
-
-    // Save current state of the input
     const { value, selectionStart, selectionEnd } = input
 
     _recordChange({
@@ -121,10 +109,7 @@ export default function Editor (props: Props): JSX.Element {
     const { stack, offset } = _history
 
     if ((stack.length > 0) && offset > -1) {
-      // When something updates, drop the redo operations
       _history.stack = stack.slice(0, offset + 1)
-
-      // Limit the number of operations to 100
       const count = _history.stack.length
 
       if (count > HISTORY_LIMIT) {
@@ -141,24 +126,17 @@ export default function Editor (props: Props): JSX.Element {
       const last = _history.stack[_history.offset]
 
       if (last !== undefined && timestamp - last.timestamp < HISTORY_TIME_GAP) {
-        // A previous entry exists and was in short interval
-
-        // Match the last word in the line
         const re = /[^a-z0-9]([a-z0-9]+)$/i
 
-        // Get the previous line
         const previous = _getLines(last.value, last.selectionStart)
           .pop()
           ?.match(re)
 
-        // Get the current line
         const current = _getLines(record.value, record.selectionStart)
           .pop()
           ?.match(re)
 
         if (previous?.[1] !== undefined && current?.[1]?.startsWith(previous[1]) !== undefined) {
-          // The last word of the previous line and current line match
-          // Overwrite previous entry so that undo will remove whole word
           _history.stack[_history.offset] = { ...record, timestamp }
 
           return
@@ -166,7 +144,6 @@ export default function Editor (props: Props): JSX.Element {
       }
     }
 
-    // Add the new operation to the stack
     _history.stack.push({ ...record, timestamp })
     _history.offset++
   }
@@ -175,8 +152,6 @@ export default function Editor (props: Props): JSX.Element {
     const input = _input
 
     if (input == null) return
-
-    // Update values and selection state
     input.value = record.value
     input.selectionStart = record.selectionStart
     input.selectionEnd = record.selectionEnd
@@ -185,7 +160,6 @@ export default function Editor (props: Props): JSX.Element {
   }
 
   const _applyEdits = (record: Record): void => {
-    // Save last selection state
     const input = _input
     const last = _history.stack[_history.offset]
 
@@ -196,20 +170,15 @@ export default function Editor (props: Props): JSX.Element {
         selectionEnd: input.selectionEnd
       }
     }
-
-    // Save the changes
     _recordChange(record)
     _updateInput(record)
   }
 
   const _undoEdit = (): void => {
     const { stack, offset } = _history
-
-    // Get the previous edit
     const record = stack[offset - 1]
 
     if (record !== undefined) {
-      // Apply the changes and update the offset
       _updateInput(record)
       _history.offset = Math.max(offset - 1, 0)
     }
@@ -217,12 +186,9 @@ export default function Editor (props: Props): JSX.Element {
 
   const _redoEdit = (): void => {
     const { stack, offset } = _history
-
-    // Get the next edit
     const record = stack[offset + 1]
 
     if (record !== undefined) {
-      // Apply the changes and update the offset
       _updateInput(record)
       _history.offset = Math.min(offset + 1, stack.length - 1)
     }
@@ -248,11 +214,9 @@ export default function Editor (props: Props): JSX.Element {
     const tabCharacter = (insertSpaces ? ' ' : '\t').repeat(tabSize)
 
     if (e.key === 'Tab' && !ignoreTabKey && state.capture) {
-      // Prevent focus change
       e.preventDefault()
 
       if (e.shiftKey) {
-        // Unindent selected lines
         const linesBeforeCaret = _getLines(value, selectionStart)
         const startLine = linesBeforeCaret.length - 1
         const endLine = _getLines(value, selectionEnd).length - 1
@@ -276,17 +240,13 @@ export default function Editor (props: Props): JSX.Element {
 
           _applyEdits({
             value: nextValue,
-            // Move the start cursor if first line in selection was modified
-            // It was modified only if it started with a tab
             selectionStart: startLineText?.startsWith(tabCharacter)
               ? selectionStart - tabCharacter.length
               : selectionStart,
-            // Move the end cursor by total number of characters removed
             selectionEnd: selectionEnd - (value.length - nextValue.length)
           })
         }
       } else if (selectionStart !== selectionEnd) {
-        // Indent selected lines
         const linesBeforeCaret = _getLines(value, selectionStart)
         const startLine = linesBeforeCaret.length - 1
         const endLine = _getLines(value, selectionEnd).length - 1
@@ -303,13 +263,11 @@ export default function Editor (props: Props): JSX.Element {
               return line
             })
             .join('\n'),
-          // Move the start cursor by number of characters added in first line of selection
-          // Don't move it if it there was no text before cursor
+
           selectionStart:
             startLineText !== undefined && /\S/.test(startLineText)
               ? selectionStart + tabCharacter.length
               : selectionStart,
-          // Move the end cursor by total number of characters added
           selectionEnd:
             selectionEnd + tabCharacter.length * (endLine - startLine + 1)
         })
@@ -317,12 +275,10 @@ export default function Editor (props: Props): JSX.Element {
         const updatedSelection = selectionStart + tabCharacter.length
 
         _applyEdits({
-          // Insert tab character at caret
           value:
             value.substring(0, selectionStart) +
             tabCharacter +
             value.substring(selectionEnd),
-          // Update caret position
           selectionStart: updatedSelection,
           selectionEnd: updatedSelection
         })
@@ -332,7 +288,6 @@ export default function Editor (props: Props): JSX.Element {
       const textBeforeCaret = value.substring(0, selectionStart)
 
       if (textBeforeCaret.endsWith(tabCharacter) && !hasSelection) {
-        // Prevent default delete behaviour
         e.preventDefault()
 
         const updatedSelection = selectionStart - tabCharacter.length
