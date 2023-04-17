@@ -1,31 +1,18 @@
 import { useState } from 'react'
-import { v4 as uuidv4 } from 'uuid'
-import CodeEditor from '@uiw/react-textarea-code-editor'
 import { modalService } from '../modal/modal.service'
 
+import Editor from './editor'
+import Prism, { highlight, languages } from 'prismjs'
+import 'prismjs/components/prism-clike'
+import 'prismjs/components/prism-javascript'
+import 'prismjs/themes/prism.css'
+
 export function EditableComponent (): JSX.Element {
-  const [childArrayComp, setDataEdit] = useState([{ id: uuidv4(), data: 'dato1' }])
   const onInputChange = (onInputEvent: any): void => {
     console.log('HTML', onInputEvent.target.innerHTML)
     console.log('TEXT', onInputEvent.target.innerText)
     console.log('split', onInputEvent.target.innerText.split(' '))
-    const arraysplit = onInputEvent.target.innerText.split(' ')
-
-    createcoMP(arraysplit)
   }
-
-  function createcoMP (data: any[]): void {
-    const datos = data.map(item => {
-      return { id: uuidv4(), data: item }
-    })
-
-    console.log('datos', datos)
-    setDataEdit(datos)
-  }
-
-  const [code, setCode] = useState(
-    'function add(a, b) {\n  return a + b;\n}'
-  )
 
   const handleChangeCode = (evn: any): void => {
     console.log('evn.target.value', evn.target.value)
@@ -42,31 +29,26 @@ export function EditableComponent (): JSX.Element {
     modalService.closeModal({ close: true, data: code })
   }
 
-  return (
-    <div className='edit-comp1'>
-      <CodeEditor
-        value={code}
-        language='js'
-        placeholder='Please enter JS code.'
-        onChange={handleChangeCode}
-        padding={15}
-        style={{
-          fontSize: 12,
-          backgroundColor: '#f5f5f5',
-          fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace'
-        }}
-      />
+  const [code, setCode] = useState(
+    'function add(a, b) {\n  return a + b;\n}'
+  )
 
-      <div
-        className='edit-comp' contentEditable='true' suppressContentEditableWarning
-        onInput={onInputChange}
-      >
-        {childArrayComp.map(item => {
-          return (<span className='span-comp' key={item.id}>{item.data}</span>)
-        })}
-      </div>
+  return (
+    <div>
+      <Editor
+        value={code}
+        onValueChange={code => setCode(code)}
+        highlight={code => highlight(code, languages.js, 'javascript')}
+        padding={10}
+        style={{
+          fontFamily: '"Fira code", "Fira Mono", monospace',
+          fontSize: 12
+        }} tabSize={0} insertSpaces={false} ignoreTabKey={false}
+      />
       <button onClick={handleCLikModal}>Modal</button>
       <button onClick={handleCLikClose}>CloseModal</button>
+      <button onClick={onInputChange}>input code</button>
+      <button onClick={handleChangeCode}>code change</button>
     </div>
 
   )

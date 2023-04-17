@@ -69,6 +69,7 @@ function App (): JSX.Element {
       {modals.map((item, index) => {
         return (<Modal key={index} item={item} />)
       })}
+
       <Routes>
         <Route path='/' element={<Tree <string> data={datatree} onChange={onChangeRecibedF} render={External} subsitituteRowContend arrayKeysEvents={arrayKeysEvents} />} />
         <Route path='/clip' element={<ClipboardComponent dataClipboard={dataClip} />} />
