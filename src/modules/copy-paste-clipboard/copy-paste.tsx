@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { spinnerService } from '../spinner/sppimer.service'
 import { modalService } from '../modal/modal.service'
 import { EditableComponent } from '../edit-component/edit-component'
+import { useParams } from 'react-router-dom'
 
 export interface PropsNodeElementClip {
   id: string
@@ -19,7 +20,8 @@ export interface propsClipboard {
 
 function ClipboardComponent ({ dataClipboard = [], onChange }: propsClipboard): JSX.Element {
   const [nodeElmenteClip, setNodeElmenteClip] = useState<PropsNodeElementClip[]>(dataClipboard)
-
+  const { paramRoute } = useParams()
+  console.log('PARAMETRO RUTA', paramRoute)
   const [componentList, setComponentList] = useState<any[]>(() => {
     const initialComponentList: any[] = []
     dataClipboard.forEach(item => {
@@ -89,6 +91,7 @@ function ClipboardComponent ({ dataClipboard = [], onChange }: propsClipboard): 
   }
 
   useEffect(() => {
+    if (paramRoute === 'true') { handleCLikModal() }
     const ultimoNodo: any = referenceDivEditable.current.childNodes[referenceDivEditable.current.children.length - 1]
     if (ultimoNodo !== undefined) {
       const range = document.createRange()
@@ -106,7 +109,7 @@ function ClipboardComponent ({ dataClipboard = [], onChange }: propsClipboard): 
     return () => {
 
     }
-  }, [componentList])
+  }, [componentList, paramRoute])
 
   // drag and drop section :
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>): void => {

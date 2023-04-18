@@ -10,6 +10,7 @@ import Tree from './modules/tree/tree/tree'
 import { Route, Routes } from 'react-router-dom'
 import ModalConteiner from './modules/modal/modal-conteiner'
 import SpinnerConteiner from './modules/spinner/spinner-conteiner'
+import DemoAxios from './modules/demo-axios/demo-axios'
 
 function App (): JSX.Element {
   const data2: any = structuredClone(DATA)
@@ -39,9 +40,10 @@ function App (): JSX.Element {
       <ModalConteiner />
       <Routes>
         <Route path='/' element={<Tree <string> data={datatree} onChange={onChangeRecibedF} render={External} subsitituteRowContend arrayKeysEvents={arrayKeysEvents} />} />
-        <Route path='/clip' element={<ClipboardComponent dataClipboard={dataClip} />} />
+        <Route path='/clip/:paramRoute' element={<ClipboardComponent dataClipboard={dataClip} />} />
       </Routes>
       <div>footer</div>
+      <DemoAxios />
     </>
   )
 }
