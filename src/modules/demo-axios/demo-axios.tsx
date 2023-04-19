@@ -15,11 +15,11 @@ function DemoAxios (): JSX.Element {
     body: 'bod'
   })
 
-  const getaxios = async (): Promise<void> => {
-    await axios.get(baseURL).then((result: any) => {
+  const getaxios = (): void => {
+    axios.get(baseURL).then((result: any) => {
       console.log(result.data)
       setPost(result.data)
-    })
+    }).then(() => {}, () => {})
   }
 
   function inputChange (element: any): void {
@@ -34,10 +34,13 @@ function DemoAxios (): JSX.Element {
     setPost({ ...post })
   }
 
-  async function handleEnviar (element: any): Promise<void> {
-    console.log('data a enviar', post)
+  async function postDataHttp (): Promise<void> {
     const baseURL2 = 'https://crudcrud.com/api/ce422db26226498383c655e48c6e0573/unicorns'
     await axios.post(baseURL2, { name: 'Sparkle Angel', age: 2, colour: 'blue' }).then((response: any) => { setPost(response.data) })
+  }
+
+  function handleEventSend (): void {
+    postDataHttp().then(() => {}, () => {})
   }
 
   return (
@@ -45,7 +48,7 @@ function DemoAxios (): JSX.Element {
       <div>
         <input onChange={inputChange} value={post.title} />
         <input onChange={inputChange2} value={post.body} />
-        <button onClick={handleEnviar}>Enviar</button>
+        <button onClick={handleEventSend}>Enviar</button>
       </div>
     </div>
   )

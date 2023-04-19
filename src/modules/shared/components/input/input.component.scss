@@ -1,0 +1,19 @@
+.sx-imput-comteiner {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 3px;
+    margin: 0;
+    padding:0;
+    
+}
+
+.sx-imput-comteiner input {
+    margin: 0;
+    padding:0;
+}
+
+.sx-imput-comteiner span {
+    font-weight: 500;
+    user-select: none;
+}

@@ -10,7 +10,7 @@ import Tree from './modules/tree/tree/tree'
 import { Route, Routes } from 'react-router-dom'
 import ModalConteiner from './modules/modal/modal-conteiner'
 import SpinnerConteiner from './modules/spinner/spinner-conteiner'
-import DemoAxios from './modules/demo-axios/demo-axios'
+import Login from './modules/demo-axios/demo-login'
 
 function App (): JSX.Element {
   const data2: any = structuredClone(DATA)
@@ -28,10 +28,6 @@ function App (): JSX.Element {
 
   const arrayKeysEvents = [TreeKeyEvent.Create, TreeKeyEvent.Update, TreeKeyEvent.Delete]
 
-  // const viewdatamodel = (): void => {
-  //   console.log('data2', datatree)
-  // }
-
   const dataClip: PropsNodeElementClip[] = [{ id: uuidv4(), type: 'text', data: 'TEXTO CARGADO' }, { id: uuidv4(), type: 'text', data: 'TEXTO CARGADO 2' }]
 
   return (
@@ -41,9 +37,8 @@ function App (): JSX.Element {
       <Routes>
         <Route path='/' element={<Tree <string> data={datatree} onChange={onChangeRecibedF} render={External} subsitituteRowContend arrayKeysEvents={arrayKeysEvents} />} />
         <Route path='/clip/:paramRoute' element={<ClipboardComponent dataClipboard={dataClip} />} />
+        <Route path='/login' element={<Login />} />
       </Routes>
-      <div>footer</div>
-      <DemoAxios />
     </>
   )
 }
