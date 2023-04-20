@@ -11,6 +11,7 @@ import { Route, Routes } from 'react-router-dom'
 import ModalConteiner from './modules/modal/modal-conteiner'
 import SpinnerConteiner from './modules/spinner/spinner-conteiner'
 import Login from './modules/demo-axios/demo-login'
+import ToastsConteiner from './modules/shared/components/toasts/toasts-conteiner'
 
 function App (): JSX.Element {
   const data2: any = structuredClone(DATA)
@@ -32,6 +33,7 @@ function App (): JSX.Element {
 
   return (
     <>
+      <ToastsConteiner />
       <SpinnerConteiner />
       <ModalConteiner />
       <Routes>

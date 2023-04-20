@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios'
 import { LocalStorageKeys, getInLocalStorage, saveInLocalStorage } from '../utilities/local-storage-manager'
 import { spinnerService } from '../../spinner/sppimer.service'
+import { toastsService } from '../../shared/components/toasts/toasts.service'
 
 export const AxiosInterceptor = (): void => {
   saveInLocalStorage(LocalStorageKeys.TOKEN, '123123123123')
@@ -17,8 +18,6 @@ export const AxiosInterceptor = (): void => {
 
   axios.interceptors.request.use((request: any) => {
     spinnerService.openSpinner()
-    console.time()
-    console.log('request')
     if (request.url?.includes('assets') !== undefined) return request
     return updateHeader(request)
   })
@@ -26,11 +25,12 @@ export const AxiosInterceptor = (): void => {
   axios.interceptors.response.use(
     (response) => {
       spinnerService.closeSpinner()
-      console.timeEnd()
-      console.log('response', response)
       return response
     },
     async (error) => {
+      spinnerService.closeSpinner()
+      toastsService.open(error.response.data)
+      // console.log(error.response.data)
       return await Promise.reject(error)
     }
   )
