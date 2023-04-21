@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react'
 import { toastsService } from './toasts.service'
-import Toasts, { propsToasts } from './toasts'
+import Toasts from './toasts'
+import { v4 as uuidv4 } from 'uuid'
 
 function ToastsConteiner (): JSX.Element {
-  const [toasts, setToasts] = useState<propsToasts[]>([] as any)
+  const [toasts, setToasts] = useState<any[]>([])
 
   useEffect(() => {
     const suscriberToasts = toastsService.getSubject().subscribe((item) => {
       if (item.isOpen) {
-        toasts.push({ item: item.element, message: item.message, autoClose: item.autoClose, timeCLose: item.timeCLose })
+        toasts.push({ id: uuidv4(), item: item.element, message: item.message, autoClose: item.autoClose, timeCLose: item.timeCLose })
       } else {
         toasts.pop()
       }
-
       setToasts([...toasts])
     })
 
@@ -21,18 +21,15 @@ function ToastsConteiner (): JSX.Element {
     }
   }, [toasts])
 
-  const deleteItemToasts = (id: number): void => {
-    console.log('ejejcuta funcion delete')
-    // console.log(toasts, id)
+  const deleteItemToasts = (id: string): void => {
     if (id !== undefined) {
-      setToasts(toasts.splice(id, 1))
+      setToasts(toasts.filter((toast) => toast.id !== id))
     }
-
-    console.log('slice', toasts, id)
   }
 
   return (
-    <>{toasts.map((item, index) => { return (<Toasts key={index} id={index} item={item.item} message={item.message} deleteItemToasts={deleteItemToasts} timeClose={item.timeClose} />) })}</>
+    <>{toasts.map((item) => { return (<Toasts key={item.id} id={item.id} item={item.item} message={item.message} deleteItemToasts={deleteItemToasts} timeClose={item.timeClose} />) })}
+    </>
   )
 };
 

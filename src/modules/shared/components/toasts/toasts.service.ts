@@ -9,7 +9,7 @@ interface toastsInterface {
 const subject$ = new Subject<toastsInterface>()
 let subjectDataToasts$: Subject<any>
 export const toastsService = {
-  open: (message: string, elementToasts?: JSX.Element, autoClose: boolean = true, timeCLose?: number): Observable<any> => {
+  open: (message: string, elementToasts?: JSX.Element, autoClose: boolean = true, timeCLose: number = 3000): Observable<any> => {
     subject$.next({ isOpen: true, message, element: elementToasts, autoClose, timeCLose })
     subjectDataToasts$ = new Subject<any>()
     return subjectDataToasts$.asObservable()
